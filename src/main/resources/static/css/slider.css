@@ -1,0 +1,18 @@
+.card-slider{ height:100% }
+
+
+.swiper{ width:100%; height:100%; }
+.swiper .swiper-wrapper .swiper-slide{
+    background-color:white;
+    border-radius:0.5em;
+    border:1px solid #b9b9b9;
+    overflow:hidden;
+}
+.swiper .swiper-wrapper .swiper-slide img{
+    width:100%; height:65%; object-fit:cover;
+}
+.swiper .swiper-wrapper .swiper-slide .card-body{
+    width:100%; height:35%;
+}
+
+
