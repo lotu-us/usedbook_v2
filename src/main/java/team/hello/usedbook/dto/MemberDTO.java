@@ -25,7 +25,7 @@ public class MemberDTO {
 
     @Data
     @AllArgsConstructor
-    public static class registerForm{
+    public static class RegisterForm {
         @NotBlank
         @Email
         @Size(max = 50)

@@ -2,62 +2,14 @@ package team.hello.usedbook.controller.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.dto.MemberDTO;
 import team.hello.usedbook.repository.MemberRepository;
-import team.hello.usedbook.utils.ValidResultList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class MemberService {
 
     @Autowired MemberRepository memberRepository;
-
-    public List loginCheck(MemberDTO.LoginForm loginForm, BindingResult bindingResult){
-        ValidResultList vrl = new ValidResultList(loginForm, bindingResult);
-
-        Member byEmail = memberRepository.findByEmail(loginForm.getEmail());
-        if(byEmail == null){
-            vrl.addCustomValid("email", false, "일치하는 이메일이 없습니다");
-        }else{
-            boolean findPassword = byEmail.getPassword().equals(loginForm.getPassword());
-            if(!findPassword){
-                vrl.addCustomValid("password", false, "비밀번호를 확인해주세요");
-            }
-        }
-
-        //Valid 하나만 출력
-        List result = new ArrayList();
-        if(vrl.hasValidByField("email")){
-            result = vrl.getValidByField("email");
-        }else{
-            if(vrl.hasValidByField("password")){
-                result = vrl.getValidByField("password");
-            }
-        }
-
-        return result;
-    }
-
-    public List registerCheck(MemberDTO.registerForm registerForm, BindingResult bindingResult) {
-        ValidResultList vrl = new ValidResultList(registerForm, bindingResult);
-
-        Member byEmail = memberRepository.findByEmail(registerForm.getEmail());
-        if(byEmail != null){
-            vrl.addCustomValid("email", false, "중복되는 이메일이 있습니다");
-        }
-
-        Member byNickName = memberRepository.findByNickName(registerForm.getNickname());
-        if(byNickName != null){
-            vrl.addCustomValid("nickname", false, "중복되는 닉네임입니다");
-        }
-
-        return vrl.getErrList();
-    }
-
 
     /*
     원본 메세지를 알면 암호화된 메세지를 구하기는 쉽지만 암호화된 원본 메세지를 구할 수 없어야 하며 이를 '단방향성'이라고 한다.
@@ -75,7 +27,7 @@ public class MemberService {
     -> salting(원본메시지에 문자열을 추가하여 다이제스트를 생성하는 행위)
     -> 기존 문자열 hunter + 랜덤 문자열 salt에 sha-256 적용
    */
-    public void registerSave(MemberDTO.registerForm registerForm) {
+    public void registerSave(MemberDTO.RegisterForm registerForm) {
         //비밀번호 암호화처리
 
         //DTO -> Entity
@@ -87,4 +39,5 @@ public class MemberService {
 
         memberRepository.save(member);
     }
+
 }

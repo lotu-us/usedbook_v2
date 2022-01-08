@@ -24,7 +24,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'	//버전 반드시 기재
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
+    implementation 'org.projectlombok:lombok:1.18.20'//버전 반드시 기재
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

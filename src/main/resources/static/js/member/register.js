@@ -10,6 +10,7 @@ function registerSubmit(){
     }
 }
 
+
 function registerCheck(element){
     var current = $(element).attr("id");
     var email = $.trim($("#email").val());
@@ -27,11 +28,6 @@ function registerCheck(element){
         }),
         success: function(lists){
             validProcess(lists, current);
-            if(lists.length > 0){ //리스트가 비어있지 않으면 오류 있음
-                validENP = false;
-            }else{          //리스트가 비어있으면 오류 없음
-                validENP = true;
-            }
         },
         error:function(error){
         }
@@ -39,17 +35,24 @@ function registerCheck(element){
 }
 
 function validProcess(lists, current){
-    var currentValid = lists.find(function(element){
-        if(element.field === current){
-            return true;
-        }
-    });
-    //currentValid = {field: 'email', status: false, message: '중복되는 이메일이 있습니다'}
+    var currentValid;
+    if(lists.length > 0){
+        validENP = false;
+         currentValid = lists.find(function(element){
+            if(element.field === current){
+                return true;
+            }
+        });     //currentValid = {field: 'email', message: '중복되는 이메일이 있습니다'}
 
-    if(currentValid != undefined){
-        inputClass(current, "red");
-        feedbackClass(current, "block", currentValid.message);
+        if(currentValid != undefined){
+            inputClass(current, "red");
+            feedbackClass(current, "block", currentValid.message);
+        }else{
+            inputClass(current, "green");
+            feedbackClass(current, "none", null);
+        }
     }else{
+        validENP = true;
         inputClass(current, "green");
         feedbackClass(current, "none", null);
     }
@@ -78,6 +81,15 @@ $("#password, #passwordConfirm").on("change keyup", function(){
 $("#email, #nickname, #password, #passwordConfirm").on("keyup", function(){
     var str = this.value.replace(" ", "");
     $(this).val(str);
+});
+
+//button활성화
+$("#email, #nickname, #password, #passwordConfirm").on("keyup", function(){
+    if(validENP && validPPC){   //submit가능
+        $("#registerForm button").attr('disabled', false);
+    }else{
+        $("#registerForm button").attr('disabled', true);
+    }
 });
 
 function inputClass(selector, color){
