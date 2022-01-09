@@ -21,6 +21,7 @@
 .banner .center #searchForm .inputbox{
     margin:auto;
     width:45%;
+    max-width:430px;
     border:2px solid #8C8C8C;
     border-radius:20px;
     padding:0.5em 1em;

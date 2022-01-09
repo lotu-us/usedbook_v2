@@ -6,12 +6,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import team.hello.usedbook.controller.service.MemberService;
+import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
-import team.hello.usedbook.dto.MemberDTO;
+import team.hello.usedbook.domain.dto.MemberDTO;
 import team.hello.usedbook.repository.MemberRepository;
+import team.hello.usedbook.service.MemberService;
 import team.hello.usedbook.utils.ValidResultList;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Slf4j
@@ -33,11 +35,15 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String loginOk(@Validated @ModelAttribute MemberDTO.LoginForm loginForm, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
+    public String loginOk(@Validated @ModelAttribute MemberDTO.LoginForm loginForm, BindingResult bindingResult, HttpSession session){
+        List list = loginCheck(loginForm, bindingResult);
+        if(list != null){
             return "member/login";
         }
-        //session 기능 추가
+        //session처리
+        Member byEmail = memberRepository.findByEmail(loginForm.getEmail());
+        session.setAttribute(SessionConstants.LOGIN_MEMBER, byEmail);
+
         return "redirect:/";
     }
 
@@ -60,14 +66,25 @@ public class MemberController {
         return null;
     }
 
-    //=================================================================================================
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/";
+    }
+
+    //=========================================================================================================================================
     @GetMapping("/register")
     public String registerForm(){
         return "member/register";
     }
 
     @PostMapping("/register")
-    public String registerSave(@Validated @ModelAttribute MemberDTO.RegisterForm registerForm){
+    public String registerSave(@Validated @ModelAttribute MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
+        List list = registerCheck(registerForm, bindingResult);
+        if(list != null){
+            return "member/register";
+        }
+
         memberService.registerSave(registerForm);
         return "redirect:/registerOk";
     }
@@ -96,9 +113,14 @@ public class MemberController {
         return "member/registerOk";
     }
 
-    //=================================================================================================
+    //=========================================================================================================================================
     @GetMapping("/findPassword")
     public String findPasswordForm(){
+        return "member/findPassword";
+    }
+
+    @PostMapping("/findPassword")
+    public String findPassword(){
         return "member/findPassword";
     }
 }

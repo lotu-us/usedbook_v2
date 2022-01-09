@@ -3,22 +3,31 @@ package team.hello.usedbook.controller.member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import team.hello.usedbook.dto.MemberDTO;
+import team.hello.usedbook.config.SessionConstants;
+import team.hello.usedbook.domain.Member;
+import team.hello.usedbook.domain.dto.MemberDTO;
+import team.hello.usedbook.repository.MemberRepository;
 
+import javax.servlet.http.HttpSession;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -30,6 +39,7 @@ class loginCheckTest {
     @Autowired private MockMvc mock;
     @Autowired private WebApplicationContext ctx;
     @Autowired private ObjectMapper objectMapper;
+    @MockBean  private MemberRepository memberRepository;
 
     @BeforeEach
     public void setUp() {
@@ -67,8 +77,12 @@ class loginCheckTest {
     @DisplayName("로그인 시 존재하지 않는 아이디 입력, 존재하지 않는 비밀번호 입력")
     void loginCheck_NotExistEmail_NotExistPassword() throws Exception {
         //given
-        String form = createForm("11@111", "12");
+        when(memberRepository.findByEmail("11@11")).thenReturn(
+               null
+        );
+        String form = createForm("11@11", "12");
 
+        //when
         //then
         mockPerform(form)
         .andExpect(jsonPath("$.[?(@.field == 'email')]").exists())
@@ -80,8 +94,12 @@ class loginCheckTest {
     @DisplayName("로그인 시 존재하는 아이디 입력, 존재하지 않는 비밀번호 입력")
     void loginCheck_ExistEmail_NotExistPassword() throws Exception {
         //given
-        String form = createForm("11@11", "12");
+        when(memberRepository.findByEmail("12@12")).thenReturn(
+                new Member("12@12", "12", "12")
+        );
+        String form = createForm("12@12", "11");
 
+        //when
         //then
         mockPerform(form)
         .andExpect(jsonPath("$.[?(@.field == 'email')]").doesNotExist())
@@ -93,13 +111,59 @@ class loginCheckTest {
     @DisplayName("로그인 시 존재하는 아이디 입력, 존재하는 비밀번호 입력")
     void loginCheck_ExistEmail_ExistPassword() throws Exception {
         //given
-        String form = createForm("11@11", "11");
+        when(memberRepository.findByEmail("12@12")).thenReturn(
+                new Member("12@12", "12", "12")
+        );
+        String form = createForm("12@12", "12");
 
+        //when
         //then
         mockPerform(form)
         .andExpect(jsonPath("$.[?(@.field == 'email')]").doesNotExist())
         .andExpect(jsonPath("$.[?(@.field == 'password')]").doesNotExist())
         .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그인 성공 시 세션 저장")
+    void loginSuccess() throws Exception {
+        //given (가짜DB)
+        Member testMember  = new Member("12@12", "12", "12");
+        when(memberRepository.findByEmail("12@12")).thenReturn(testMember);
+
+        //when
+        MvcResult mvcResult = mock.perform(
+                MockMvcRequestBuilders.post("/login")
+                        .param("email", "12@12")
+                        .param("password", "12")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+        )
+        .andDo(print()).andReturn();
+
+        //then
+        HttpSession getSession = mvcResult.getRequest().getSession();
+        Object attribute = getSession.getAttribute(SessionConstants.LOGIN_MEMBER);
+        Assertions.assertThat((Member)attribute).isEqualTo(testMember);
+    }
+
+    @Test
+    @DisplayName("로그인 실패 시 예외 발생")
+    void loginFail() throws Exception {
+        //given (가짜DB)
+        Member testMember  = new Member("12@12", "12", "12");
+        when(memberRepository.findByEmail("12@12")).thenReturn(testMember);
+
+        //when
+        MvcResult mvcResult = mock.perform(
+                MockMvcRequestBuilders.post("/login")
+                        .param("email", "12@12")
+                        .param("password", "123")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+        )
+        .andReturn();
+
+        Object attribute = mvcResult.getRequest().getSession().getAttribute(SessionConstants.LOGIN_MEMBER);
+        Assertions.assertThat(attribute).isNull();
     }
 
 
