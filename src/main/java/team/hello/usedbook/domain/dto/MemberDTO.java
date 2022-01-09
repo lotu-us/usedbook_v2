@@ -1,6 +1,7 @@
-package team.hello.usedbook.dto;
+package team.hello.usedbook.domain.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import team.hello.usedbook.utils.Password;
 
 import javax.validation.constraints.Email;

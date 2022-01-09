@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Member;
-import team.hello.usedbook.dto.MemberDTO;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package team.hello.usedbook.controller.service;
+package team.hello.usedbook.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.hello.usedbook.domain.Member;
-import team.hello.usedbook.dto.MemberDTO;
+import team.hello.usedbook.domain.dto.MemberDTO;
 import team.hello.usedbook.repository.MemberRepository;
 
 @Service
