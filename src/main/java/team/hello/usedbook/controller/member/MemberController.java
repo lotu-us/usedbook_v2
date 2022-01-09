@@ -121,6 +121,7 @@ public class MemberController {
 
     @PostMapping("/findPassword")
     public String findPassword(){
-        return "member/findPassword";
+        
+        return "member/login";
     }
 }

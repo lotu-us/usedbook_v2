@@ -79,15 +79,35 @@ public class registerCheckTest {
     @DisplayName("회원가입폼 필드 valid 확인")
     void registerForm_FieldValidCheck() throws Exception {
         //given
-        MemberDTO.RegisterForm registerForm = new MemberDTO.RegisterForm("11", "1", "1");
+        MemberDTO.RegisterForm registerForm[] = {
+            new MemberDTO.RegisterForm("", "", ""),                 //모두 빈문자
+            new MemberDTO.RegisterForm(" ", " ", " "),              //모두 공백 1자리
+            new MemberDTO.RegisterForm("re@1333333333333333333333333333333333333333333333333333333333", "133333333333333333333333333", "testregister!1233333333333333333333333"), //모두 최대길이 넘을때
+            new MemberDTO.RegisterForm("1", "1", "1"),              //모두 1자리
+            new MemberDTO.RegisterForm("re@", "1e", "1s@"),          //이메일 양식 확인 (에러발생)
+            new MemberDTO.RegisterForm("re@1", "1e", "1s@"),         //이메일 양식 확인 (에러없음)
+            new MemberDTO.RegisterForm("re@1", "1eㅎㅎ", "1s@"),     //닉네임 영어 숫자 한글 가능 (에러없음)
+            new MemberDTO.RegisterForm("re@1", "1e#", "1s@"),        //닉네임 특수문자 확인 (에러발생)
+            new MemberDTO.RegisterForm("re@1", "1e", "1sㅎ"),         //비밀번호 숫자, 영어, 특수문자 각각 1개 이상 포함 (한글 에러발생?)
+            new MemberDTO.RegisterForm("re@1", "1e", "121241"),         //비밀번호 숫자로만
+            new MemberDTO.RegisterForm("re@1", "1e", "eflkwjefiwoe"),     //비밀번호 영어로만
+            new MemberDTO.RegisterForm("re@1", "1e", "#$@*(@#*"),     //비밀번호 특수문자로만
+            new MemberDTO.RegisterForm("re@1", "13", "testregister!123"), //비밀번호 숫자, 영어, 특수문자 각각 1개 이상 포함 (에러없음)
+        };
 
         //then
-        Set<ConstraintViolation<MemberDTO.RegisterForm>> violations = validator.validate(registerForm);
+        int count=1;
+        for (MemberDTO.RegisterForm form : registerForm) {
+            Set<ConstraintViolation<MemberDTO.RegisterForm>> violations = validator.validate(form);
 
-        // 검증 결과를 출력
-        for (ConstraintViolation<MemberDTO.RegisterForm> violation : violations) {
-            String field = violation.getPropertyPath().toString();
-            String message = violation.getMessage();
+            // 검증 결과를 출력
+            System.out.println("=== ["+count+"] ====================================================");
+            for (ConstraintViolation<MemberDTO.RegisterForm> violation : violations) {
+                String field = violation.getPropertyPath().toString();
+                String message = violation.getMessage();
+                System.out.println(field+" : "+message);
+            }
+            count++;
         }
     }
 

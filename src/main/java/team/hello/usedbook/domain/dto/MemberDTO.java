@@ -16,10 +16,10 @@ public class MemberDTO {
     public static class LoginForm{
         @NotBlank
         @Email
-        @Size(max = 50)
+        @Size(max = 40)
         private String email;
 
-        @NotBlank
+        @NotBlank(message = "비밀번호를 입력해주세요")
         @Password(min=2, max=20)
         private String password;
     }
@@ -29,7 +29,7 @@ public class MemberDTO {
     public static class RegisterForm {
         @NotBlank
         @Email
-        @Size(max = 50)
+        @Size(max = 40)
         private String email;
 
         @NotBlank
@@ -37,7 +37,7 @@ public class MemberDTO {
         @Pattern(regexp = "^[0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣_]*$", message = "특수문자는 불가능합니다")    //영어,숫자,한글, _만 가능
         private String nickname;
 
-        @NotBlank
+        @NotBlank(message = "비밀번호를 입력해주세요")
         @Password(min=2, max=20)
         private String password;
 
