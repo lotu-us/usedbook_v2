@@ -61,15 +61,20 @@ public class registerCheckTest {
 
     String uri = "/registerCheck";
 
-    private String createForm(String email, String nickname, String password) throws Exception{
+    private MemberDTO.RegisterForm createForm(String email, String nickname, String password) throws Exception{
         MemberDTO.RegisterForm registerForm = new MemberDTO.RegisterForm(email, nickname, password);
-        return objectMapper.writeValueAsString(registerForm);
+        //return objectMapper.writeValueAsString(registerForm);
+        return registerForm;
     }
 
-    private ResultActions mockPerform(String formdata) throws Exception {
+    private ResultActions mockPerform(MemberDTO.RegisterForm form) throws Exception {
         ResultActions perform = mock.perform(
-                MockMvcRequestBuilders.post(uri).content(formdata)
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                MockMvcRequestBuilders.post(uri)
+                .param("email", form.getEmail())
+                .param("nickname", form.getNickname())
+                .param("password", form.getPassword())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
         );
         return perform;
     }
@@ -115,7 +120,7 @@ public class registerCheckTest {
     @DisplayName("회원가입 시 아이디 중복, 닉네임 중복")
     void registerCheck_DuplicateId_DuplicateNickname() throws Exception {
         //given
-        String form = createForm("11@11", "11", "11");
+        MemberDTO.RegisterForm form = createForm("11@11", "11", "11");
 
         //then
         mockPerform(form)
@@ -130,7 +135,7 @@ public class registerCheckTest {
     @DisplayName("회원가입 시 아이디 중복아님, 닉네임 중복아님")
     void registerCheck_NotDuplicateId_NotDuplicateNickname() throws Exception {
         //given
-        String form = createForm("11@13", "13", "11");
+        MemberDTO.RegisterForm form = createForm("11@13", "13", "11");
 
         //then
         mockPerform(form)
