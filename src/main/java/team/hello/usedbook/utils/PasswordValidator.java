@@ -3,7 +3,6 @@ package team.hello.usedbook.utils;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class PasswordValidator implements ConstraintValidator<Password, String> {
 
@@ -28,11 +27,11 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
         }
 
         //숫자, 문자, 특수문자 각각 1개 이상 포함
-        matcher = Pattern.compile(regex).matcher(password);
-        if(!matcher.matches()) {
-            addConstraintViolation(context, "비밀번호는 숫자, 영어, 특수문자 각각 1개 이상 포함하고 "+min+"자 ~ "+ max +"자로 입력해주세요");
-            return false;
-        }
+//        matcher = Pattern.compile(regex).matcher(password);
+//        if(!matcher.matches()) {
+//            addConstraintViolation(context, "비밀번호는 숫자, 영어, 특수문자 각각 1개 이상 포함하고 "+min+"자 ~ "+ max +"자로 입력해주세요");
+//            return false;
+//        }
 
         return true;
     }
