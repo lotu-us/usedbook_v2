@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.MemberDTO;
@@ -34,12 +31,18 @@ public class MemberController {
 //    }
 
     @GetMapping("/login")
-    public String loginForm(){
+    public String loginForm(HttpSession session){
+        Member member = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+        if(member != null){
+            return "index";
+        }
+
         return "member/login";
     }
 
     @PostMapping("/login")
-    public String loginOk(@Validated @ModelAttribute MemberDTO.LoginForm loginForm, BindingResult bindingResult, HttpSession session){
+    public String loginOk(@Validated @ModelAttribute MemberDTO.LoginForm loginForm, BindingResult bindingResult,
+                          HttpSession session, @RequestParam(defaultValue = "/") String redirectURL){
         List list = loginCheck(loginForm, bindingResult);
         if(list != null){
             return "member/login";
@@ -48,7 +51,7 @@ public class MemberController {
         Member byEmail = memberRepository.findByEmail(loginForm.getEmail());
         session.setAttribute(SessionConstants.LOGIN_MEMBER, byEmail);
 
-        return "redirect:/";
+        return "redirect:"+redirectURL;
     }
 
     @PostMapping("/loginCheck")
@@ -156,5 +159,8 @@ public class MemberController {
         }
         return null;
     }
+
+    //=========================================================================================================================================
+
 
 }

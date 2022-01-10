@@ -13,7 +13,7 @@
 <div th:replace="fragments/navbar.html :: navbar"></div>
 <div class="container">
 
-    <form id="loginForm" class="needs-validation"  method="post" action="/login">
+    <form id="loginForm" class="needs-validation"  method="post" th:action="@{/login(redirectURL=${param.redirectURL})}">
         <h1>로그인</h1><br>
 
         <div class="form-floating mb-3">

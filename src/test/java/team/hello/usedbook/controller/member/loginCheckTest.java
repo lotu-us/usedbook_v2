@@ -176,4 +176,21 @@ class loginCheckTest {
     }
 
 
+    @Test
+    @DisplayName("로그인 리다이렉트 확인")
+    void login_Redirect() throws Exception {
+        //given (가짜DB)
+        Member testMember  = new Member("12@12", "12", "12");
+        when(memberRepository.findByEmail("12@12")).thenReturn(testMember);
+
+        //when
+        mock.perform(
+                MockMvcRequestBuilders.post("/login?redirectURL=/dashboard/myInfo")
+                        .param("email", "12@12")
+                        .param("password", "12")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+        )
+        .andDo(print());
+    }
+
 }

@@ -22,6 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
        if(session == null || session.getAttribute(SessionConstants.LOGIN_MEMBER) == null){
             response.sendRedirect("/login?redirectURL="+requestURI);
             //기존 요청을 쿼리 파라미터로 redirectURL로 지정함으로써 로그인한 이후에는 기존 요청 페이지로 리다이렉트 될 수 있도록 처리하는 것이 고객 입장에서 편리
+            //redirect하면 get 요청이 이루어진다. 따라서 post에서 사용하고싶다면 반드시 login.html의 form action에 매개변수를 붙여주어야 한다.
             return false;
         }
 
