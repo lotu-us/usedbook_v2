@@ -20,12 +20,12 @@ function registerCheck(element){
     $.ajax({
         type:"post",
         url:"/registerCheck",
-        contentType: 'application/json',
-        data: JSON.stringify({
-            "email":email,
-            "nickname":nickname,
-            "password":password
-        }),
+        contentType: 'application/x-www-form-urlencoded',
+        data: {
+            "email" : email,
+            "nickname" : nickname,
+            "password" : password
+        },
         success: function(lists){
             validProcess(lists, current);
         },

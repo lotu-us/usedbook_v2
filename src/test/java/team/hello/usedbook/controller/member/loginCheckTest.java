@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import team.hello.usedbook.config.SessionConstants;
@@ -59,15 +61,22 @@ class loginCheckTest {
 
     String uri = "/loginCheck";
 
-    private String createForm(String email, String password) throws Exception{
+    private MemberDTO.LoginForm createForm(String email, String password) throws Exception{
         MemberDTO.LoginForm loginForm = new MemberDTO.LoginForm(email, password);
-        return objectMapper.writeValueAsString(loginForm);
+        //return objectMapper.writeValueAsString(loginForm);
+        return loginForm;
     }
 
-    private ResultActions mockPerform(String formdata) throws Exception {
+    private ResultActions mockPerform(MemberDTO.LoginForm form) throws Exception {
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+
+        data.add("email", form.getEmail());
+        data.add("password", form.getPassword());
+
         ResultActions perform = mock.perform(
-                MockMvcRequestBuilders.post(uri).content(formdata)
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                MockMvcRequestBuilders.post(uri)
+                .params(data)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE).accept(MediaType.APPLICATION_JSON)
         );
         return perform;
     }
@@ -80,7 +89,7 @@ class loginCheckTest {
         when(memberRepository.findByEmail("11@11")).thenReturn(
                null
         );
-        String form = createForm("11@11", "12");
+        MemberDTO.LoginForm form = createForm("11@11", "12");
 
         //when
         //then
@@ -97,7 +106,7 @@ class loginCheckTest {
         when(memberRepository.findByEmail("12@12")).thenReturn(
                 new Member("12@12", "12", "12")
         );
-        String form = createForm("12@12", "11");
+        MemberDTO.LoginForm form = createForm("12@12", "11");
 
         //when
         //then
@@ -114,7 +123,7 @@ class loginCheckTest {
         when(memberRepository.findByEmail("12@12")).thenReturn(
                 new Member("12@12", "12", "12")
         );
-        String form = createForm("12@12", "12");
+        MemberDTO.LoginForm form = createForm("12@12", "12");
 
         //when
         //then

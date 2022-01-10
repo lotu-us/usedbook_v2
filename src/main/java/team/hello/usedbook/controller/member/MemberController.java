@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.MemberDTO;
@@ -22,6 +25,7 @@ public class MemberController {
 
     @Autowired MemberService memberService;
     @Autowired MemberRepository memberRepository;
+
 
 //    @Autowired RegisterValidator registerValidator;
 //    @InitBinder
@@ -49,7 +53,7 @@ public class MemberController {
 
     @PostMapping("/loginCheck")
     @ResponseBody
-    public List loginCheck(@Validated @RequestBody MemberDTO.LoginForm loginForm, BindingResult bindingResult){
+    public List loginCheck(@Validated @ModelAttribute MemberDTO.LoginForm loginForm, BindingResult bindingResult){
         Member byEmail = memberRepository.findByEmail(loginForm.getEmail());
         if(byEmail == null){
             bindingResult.rejectValue("email", "notExist", "존재하지 않는 이메일입니다.");
@@ -91,7 +95,7 @@ public class MemberController {
 
     @PostMapping("/registerCheck")
     @ResponseBody
-    public List registerCheck(@Validated @RequestBody MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
+    public List registerCheck(@Validated @ModelAttribute MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
         Member byEmail = memberRepository.findByEmail(registerForm.getEmail());
         if(byEmail != null){
             bindingResult.rejectValue("email", "duplicate", "이미 존재하는 이메일입니다.");
