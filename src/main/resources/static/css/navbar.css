@@ -16,7 +16,7 @@
     padding-right: var(--bs-gutter-x, .75rem);
 }
 
-@media (max-width:769px){
+@media (max-width:767px){
     .login-position{
         position:absolute;
         top:0.5em;
