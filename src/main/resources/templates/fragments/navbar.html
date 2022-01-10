@@ -40,7 +40,7 @@
                     <span th:text="${session.loginMember.nickname}">닉네임</span> 님
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item"><i class="fas fa-user"></i> 회원정보</a></li>
+                    <li><a class="dropdown-item" th:href="@{/dashboard/myInfo}"><i class="fas fa-user"></i> 대시보드</a></li>
                     <li><a class="dropdown-item"><i class="fas fa-file-alt"></i> 글작성하기</a></li>
                     <li><a class="dropdown-item" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> LOGOUT</a></li>
                 </ul>
