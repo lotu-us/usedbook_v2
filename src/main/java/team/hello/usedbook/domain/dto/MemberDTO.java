@@ -40,7 +40,13 @@ public class MemberDTO {
         @NotBlank(message = "비밀번호를 입력해주세요")
         @Password(min=2, max=20)
         private String password;
+    }
 
+    @Data
+    @AllArgsConstructor
+    public static class FindForm {
+        private String email;
+        private String nickname;
     }
 
 }

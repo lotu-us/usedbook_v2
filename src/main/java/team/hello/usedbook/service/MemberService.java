@@ -5,11 +5,15 @@ import org.springframework.stereotype.Service;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.MemberDTO;
 import team.hello.usedbook.repository.MemberRepository;
+import team.hello.usedbook.utils.CustomMailSender;
+
+import java.util.UUID;
 
 @Service
 public class MemberService {
 
     @Autowired MemberRepository memberRepository;
+    @Autowired CustomMailSender mailSender;
 
     /*
     원본 메세지를 알면 암호화된 메세지를 구하기는 쉽지만 암호화된 원본 메세지를 구할 수 없어야 하며 이를 '단방향성'이라고 한다.
@@ -40,4 +44,22 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    public String createTempPasswordAndSendMail(Member byEmail) {
+        //임시 비밀번호
+        UUID uid = UUID.randomUUID();
+        String tempPassword = uid.toString().substring(0,8);
+
+        String html =
+        "<div>" +
+            byEmail.getNickname()+"님의 임시 비밀번호는 <span style='font-weight:bold; color:blue;'>"+tempPassword+"</span> 입니다." +
+        "</div>";
+
+        CustomMailSender.MailDTO mailDTO = new CustomMailSender.MailDTO();
+        mailDTO.setTitle("[책방] 임시 비밀번호 안내 메일입니다.");
+        mailDTO.setMessage(html);
+        mailDTO.setAddress(byEmail.getEmail());
+        mailSender.mimeMailSend(mailDTO);
+
+        return tempPassword;
+    }
 }

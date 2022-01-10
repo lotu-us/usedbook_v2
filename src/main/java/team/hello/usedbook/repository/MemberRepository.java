@@ -1,9 +1,6 @@
 package team.hello.usedbook.repository;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Member;
 
@@ -27,4 +24,7 @@ public interface MemberRepository {
     @Insert("insert into member(email, nickname, password) values(#{email}, #{nickname}, #{password})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(Member member);
+
+    @Update("update member set password=#{tempPassword} where id=#{id}")
+    void updatePassword(Long id, String tempPassword);
 }
