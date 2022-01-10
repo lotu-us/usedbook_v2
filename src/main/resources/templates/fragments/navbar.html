@@ -28,22 +28,22 @@
                     <a class="nav-link" th:href="@{/category/cartoon}" th:classappend="${category}=='cartoon' ? 'custom-active'">만화</a>
                 </li>
             </ul>
+        </div>
 
-            <div class="login-position">
-                <a class="btn btn btn-outline-primary" href="../member/login.html" th:href="@{/login}"
-                    th:if="${session.loginMember == null}">
-                    <i class="fas fa-sign-in-alt"></i> LOGIN
+        <div class="login-position">
+            <a class="btn btn btn-outline-primary" href="../member/login.html" th:href="@{/login}"
+               th:if="${session.loginMember == null}">
+                <i class="fas fa-sign-in-alt"></i> LOGIN
+            </a>
+            <div class="dropdown" th:if="${session.loginMember != null}">
+                <a class="btn btn btn-outline-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span th:text="${session.loginMember.nickname}">닉네임</span> 님
                 </a>
-                <div class="dropdown" th:if="${session.loginMember != null}">
-                    <a class="btn btn btn-outline-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-cog"></i> <span th:text="${session.loginMember.nickname}">닉네임</span> 님
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item"><i class="fas fa-user"></i> 회원정보</a></li>
-                        <li><a class="dropdown-item"><i class="fas fa-file-alt"></i> 글작성하기</a></li>
-                        <li><a class="dropdown-item" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> LOGOUT</a></li>
-                    </ul>
-                </div>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item"><i class="fas fa-user"></i> 회원정보</a></li>
+                    <li><a class="dropdown-item"><i class="fas fa-file-alt"></i> 글작성하기</a></li>
+                    <li><a class="dropdown-item" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> LOGOUT</a></li>
+                </ul>
             </div>
         </div>
     </div>
