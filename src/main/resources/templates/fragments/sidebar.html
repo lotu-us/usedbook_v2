@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/sidebar.css">
+</head>
+<body>
+
+<th:block th:fragment="sidebar(menu)">
+    <div class="sidebar">
+        <ul class="nav nav-pills ms-2 mt-2 me-2">
+            <li>
+                <a href="#" class="nav-link"
+                   th:href="@{/dashboard/myInfo}" th:classappend="${menu} == 'myInfo' ? 'active'">
+                    <i class="fas fa-user-circle"></i> 내 정보
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link"
+                   th:href="@{/dashboard/myPosts}" th:classappend="${menu} == 'myPosts' ? 'active'">
+                    <i class="fas fa-file-alt"></i> 내 게시글
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link"
+                   th:href="@{/dashboard/myComments}" th:classappend="${menu} == 'myComments' ? 'active'">
+                    <i class="fas fa-comments"></i> 내 댓글
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+
+    <div class="sidebar mobile" style="width: 4rem;">
+        <ul class="nav nav-pills text-center">
+            <li>
+                <a href="#" class="nav-link py-3 border"
+                   th:href="@{/dashboard/myInfo}" th:classappend="${menu} == 'myInfo' ? 'active'">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link py-3 border"
+                   th:href="@{/dashboard/myPosts}" th:classappend="${menu} == 'myPosts' ? 'active'">
+                    <i class="fas fa-file-alt"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link py-3 border"
+                   th:href="@{/dashboard/myComments}" th:classappend="${menu} == 'myComments' ? 'active'">
+                    <i class="fas fa-comments"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</th:block>
+</body>
+</html>
