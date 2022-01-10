@@ -5,11 +5,11 @@ function loginSubmit(){
     $.ajax({
         type:"post",
         url:"/loginCheck",
-        contentType: 'application/x-www-form-urlencoded',
-        data: {
+        contentType: 'application/json',
+        data: JSON.stringify({
             "email":email,
             "password":password
-        },
+        }),
         success: function(data){
             if(data != "" && data[0].field == "email"){
                 inputClass("email", "red");

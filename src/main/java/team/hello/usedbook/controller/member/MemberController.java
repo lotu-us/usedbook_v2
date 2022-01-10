@@ -49,7 +49,7 @@ public class MemberController {
 
     @PostMapping("/loginCheck")
     @ResponseBody
-    public List loginCheck(@Validated @ModelAttribute MemberDTO.LoginForm loginForm, BindingResult bindingResult){
+    public List loginCheck(@Validated @RequestBody MemberDTO.LoginForm loginForm, BindingResult bindingResult){
         Member byEmail = memberRepository.findByEmail(loginForm.getEmail());
         if(byEmail == null){
             bindingResult.rejectValue("email", "notExist", "존재하지 않는 이메일입니다.");
@@ -91,7 +91,7 @@ public class MemberController {
 
     @PostMapping("/registerCheck")
     @ResponseBody
-    public List registerCheck(@Validated @ModelAttribute MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
+    public List registerCheck(@Validated @RequestBody MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
         Member byEmail = memberRepository.findByEmail(registerForm.getEmail());
         if(byEmail != null){
             bindingResult.rejectValue("email", "duplicate", "이미 존재하는 이메일입니다.");
