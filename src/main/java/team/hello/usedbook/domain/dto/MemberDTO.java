@@ -49,4 +49,21 @@ public class MemberDTO {
         private String nickname;
     }
 
+    @Data
+    public static class UpdateForm {
+
+        @NotBlank
+        private String updateFieldName;
+
+        @Size(min=2, max=20, message = "닉네임은 2자 ~ 20자 사이로 입력해주세요")
+        @Pattern(regexp = "^[0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣_]*$", message = "특수문자는 불가능합니다")    //영어,숫자,한글, _만 가능
+        private String nickname = "";
+
+        @Password(min=2, max=20)
+        private String oldPassword = "";
+
+        @Password(min=2, max=20)
+        private String newPassword = "";
+    }
+
 }

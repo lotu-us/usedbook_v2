@@ -1,8 +1,6 @@
 package team.hello.usedbook.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter @ToString
@@ -20,5 +18,11 @@ public class Member {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+    }
+
+
+    //test용
+    public void addIdForTest(Long id){
+        this.id = id;
     }
 }

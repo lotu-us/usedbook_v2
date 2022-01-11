@@ -37,4 +37,20 @@ public class ValidResultList {
 
         return result;
     }
+
+    public List<ValidResult> getList(String fieldName){
+        List<ValidResult> result = new ArrayList<>();
+
+        List<FieldError> fieldErrors = this.bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError.getField().equals(fieldName)){
+                ValidResult validResult = new ValidResult(
+                        fieldError.getField(), fieldError.getDefaultMessage()
+                );
+                result.add(validResult);
+            }
+        }
+
+        return result;
+    }
 }

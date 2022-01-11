@@ -15,6 +15,9 @@ public interface MemberRepository {
 
     public List<Member> findAllXml();
 
+    @Select("select * from member where id=#{id}")
+    public Member findById(Long id);
+
     @Select("select * from member where email=#{email}")
     public Member findByEmail(String email);
 
@@ -27,4 +30,8 @@ public interface MemberRepository {
 
     @Update("update member set password=#{tempPassword} where id=#{id}")
     void updatePassword(Long id, String tempPassword);
+
+    @Update("update member set ${field}=#{value} where id=#{id}")
+    int update(Long id, String field, String value);
+
 }
