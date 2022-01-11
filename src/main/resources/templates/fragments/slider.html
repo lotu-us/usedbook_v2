@@ -10,11 +10,10 @@
 </head>
 <body>
 
-<div class="card-slider" th:fragment="card-slider(id, list)">
-    <div class="swiper" th:id="${id}" >
+<div th:id="${id}" class="card-slider" th:fragment="card-slider(id, list)">
+    <div class="swiper">
         <div class="swiper-wrapper">
-            <!-- Slides -->
-<!--            <th:block th:each="post : ${list}">-->
+<!--        <th:block th:each="post : ${list}">-->
             <th:block th:each="num : ${#numbers.sequence(1,5)}">
             <div class="swiper-slide">
                 <img class="swiper-lazy" src="https://plchldr.co/i/245x180">
@@ -32,6 +31,43 @@
         <div class="swiper-button-next" th:id="next_+${id}"></div>
     </div>
 </div>
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+
+<div th:id="${id}" class="thumb-slider" th:fragment="thumb-slider(id)">
+
+    <div class="swiper thumb-top"
+         style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+        <div class="swiper-wrapper">
+            <th:block th:each="num : ${#numbers.sequence(1,10)}">
+            <div class="swiper-slide">
+                <img th:src="'https://swiperjs.com/demos/images/nature-'+${num}+'.jpg'" />
+            </div>
+            </th:block>
+        </div>
+        <div class="swiper-button-prev" th:id="prev_+${id}"></div>
+        <div class="swiper-button-next" th:id="next_+${id}"></div>
+    </div>
+    <div thumbsSlider="" class="swiper thumb-bottom pt-2">
+        <div class="swiper-wrapper">
+            <th:block th:each="num : ${#numbers.sequence(1,10)}">
+            <div class="swiper-slide">
+                <img th:src="'https://swiperjs.com/demos/images/nature-'+${num}+'.jpg'" />
+            </div>
+            </th:block>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
 
 
 
