@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PostController {
-//    @GetMapping("/")
-//    public String loginForm(){
-//        return "member/login";
-//    }
+
+    @GetMapping("/post/write")
+    public String writePost(){
+
+        return "post/write";
+    }
 }

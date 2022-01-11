@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private static final String[] whitelist = {"/css/**", "/js/**", "/img/**", "/",
-            "/*",
+            "/*", "/post/**",
             "/mybatis",
             "/error"
     };
