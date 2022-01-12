@@ -153,7 +153,7 @@ function fileChange(event){
             thumbSlider.addSlide(blobsrc);
         }
     });
-    console.log(files.map);
+    //console.log(files.map);
 
     if(count > files.cntMax){
         alert("이미지는 10개까지만 업로드 가능합니다. \n 10개 이후의 이미지는 삭제되었습니다.");
