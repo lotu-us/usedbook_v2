@@ -26,12 +26,30 @@
 }
 .thumb-slider .swiper .swiper-wrapper .swiper-slide img{ width:100%; height:100% }
 
-.thumb-slider .swiper.thumb-top{ height:75% }
+/* top, bottom 크기 및 세부설정 */
+.thumb-slider .swiper.thumb-top{ height:75%;
+    background-color:black;
+    border-radius:0.3em;
+    border:1px solid #b9b9b9;
+    overflow:hidden;
+}
+.thumb-slider .swiper.thumb-top:before {
+    content:"이미지를 추가해주세요";
+    width:fit-content;
+    font-size:2em;
+    color:#ffffff99;
+    position:absolute;
+    top:50%;    left:50%;
+    transform: translate(-50%, -50%);
+}
 .thumb-slider .swiper.thumb-bottom{ height:25% }
 
+
+/* 이미지 */
 .thumb-slider .swiper.thumb-top .swiper-wrapper .swiper-slide img { object-fit:contain; }
 .thumb-slider .swiper.thumb-bottom .swiper-wrapper .swiper-slide img { object-fit:cover; }
 
+/* 이미지 삭제 */
 .thumb-slider .swiper.thumb-top .swiper-wrapper .swiper-slide .remove-slide {
     cursor:pointer;
 }
