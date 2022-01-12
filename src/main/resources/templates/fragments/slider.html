@@ -40,31 +40,18 @@
     <div class="swiper thumb-top"
          style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
         <div class="swiper-wrapper">
-            <th:block th:each="num : ${#numbers.sequence(1,6)}">
-            <div class="swiper-slide">
-                <!--/* 파일 삭제 */-->
-                <div class="remove-slide" onclick="fileRemove(event)"><i class="fas fa-times"></i></div>
-                <!--/* 파일 삭제 */-->
-                <img th:src="'https://swiperjs.com/demos/images/nature-'+${num}+'.jpg'" />
-            </div>
-            </th:block>
+
         </div>
         <div class="swiper-button-prev"></div>
         <div class="swiper-button-next"></div>
     </div>
     <div thumbsSlider="" class="swiper thumb-bottom pt-2">
         <div class="swiper-wrapper">
-            <th:block th:each="num : ${#numbers.sequence(1,6)}">
-            <div class="swiper-slide">
-                <img th:src="'https://swiperjs.com/demos/images/nature-'+${num}+'.jpg'" />
-            </div>
-            </th:block>
-
             <!--/* 파일 추가 */-->
             <div class="swiper-slide">
                 <img th:src="@{/img/slider-plus.jpg}" onclick="addImgClick(event)" />
             </div>
-<!--            <input type="file" id="inputFile" accept="image/*" style="display:none;" multiple onchange="fileChange(event)">-->
+            <!--/* <input type="file" id="inputFile" accept="image/*" style="display:none;" multiple onchange="fileChange(event)"> */-->
             <!--/* type이 file일때 onclick은 파일 선택 전 실행되고 onchange는 파일 선택 후 실행된다 */-->
         </div>
     </div>
