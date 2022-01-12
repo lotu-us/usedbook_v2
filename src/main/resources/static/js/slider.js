@@ -31,39 +31,143 @@ function createCardSlider(thisID){
 //===================================================================================
 //===================================================================================
 
-var thumbTopSliders = new Map();
-var thumbBottomSliders = new Map();
+const thumbSlider = {
+    id: $(".thumb-slider").attr("id"),
+    bottom: null,
+    top: null,   //bottom이 있어야 top의 thumbs: 에서 bottom을 삽입할 수 있다
+    init:function(){
+        var thumbBottom = new Swiper(".thumb-bottom", {
+            spaceBetween: 10,
+            slidesPerView: 5,
+            freeMode: true,
+            watchSlidesProgress: true,
+        });
 
-$('.thumb-slider').each(function(i) {
-    var thisID = $(this).attr("id");
-    thumbBottomSliders.set('thumbBottomSlider_'+thisID, createThumbBottomSlider(thisID));
-    thumbTopSliders.set('thumbTopSlider_'+thisID, createThumbTopSlider(thisID));
-    //bottom이 위로 올라가야함. 안그러면 topslider생성 시 클릭 동작 안함
+        var thumbTop = new Swiper(".thumb-top", {
+             spaceBetween: 10,
+             navigation: {
+                 nextEl: '.swiper-button-next',
+                 prevEl: '.swiper-button-prev',
+             },
+             thumbs: {
+               swiper: thumbBottom,
+             },
+         });
+
+         this.top = thumbTop;
+         this.bottom = thumbBottom;
+    },
+    addSlide:function(blobsrc){
+        var lastIndex = files.map.size-1;
+        this.top.addSlide(lastIndex, `
+            <div class="swiper-slide">
+                <!--/* 파일 삭제 */-->
+                <div class="remove-slide" onclick="fileRemove(event)"><i class="fas fa-times"></i></div>
+                <!--/* 파일 삭제 */-->
+                <img src="${blobsrc}" />
+            </div>
+        `);
+
+        this.bottom.addSlide(lastIndex, `
+            <div class="swiper-slide">
+                <img src="${blobsrc}" />
+            </div>
+        `);
+
+        //추가한 슬라이드로 화면이동
+        this.top.slideTo(lastIndex);
+        this.bottom.slideTo(lastIndex);
+        //https://www.tutorialdocs.com/tutorial/swiper/api-methods-properties.html
+    },
+    deleteSlide:function(index){
+        this.top.removeSlide(index);
+        this.bottom.removeSlide(index);
+    }
+}
+
+
+//===================================================================================
+//===================================================================================
+//===================================================================================
+const filesMap = new Map();
+const files = {
+    map: filesMap,
+    init : function(){
+        var imgs = $(".thumb-top .swiper-slide img");
+        for(var i=0; i<imgs.length; i++){
+            this.map.set(imgs[i].src, imgs[i].src);
+        }
+    },
+    cntMin: 1,
+    cntMax: 10,
+    sizeMaxCheck: function(){
+        if(this.map.size >= this.cntMax){
+            alert("이미지는 10개까지만 업로드 가능합니다.");
+            return false;
+        }
+    },
+    sizeMinCheck: function(){
+        if(this.map.size < this.cntMin){
+            alert("이미지는 최소 1개 이상 업로드 해야합니다.");
+            return false;
+        }
+    }
+}
+
+$(document).ready(function(){
+    files.init();
+    thumbSlider.init();
+//    console.log(files.map);
 });
+//$(window).on("load", function(){
+//    files.init();
+//    thumbSlider.init();
+//});
 
-function createThumbTopSlider(thisID){
-    var selector = '#'+thisID+" .thumb-top";
-    var thumbTop = new Swiper(selector, {
-        spaceBetween: 10,
-        navigation: {
-            nextEl: '#next_'+thisID,
-            prevEl: '#prev_'+thisID,
-        },
-        thumbs: {
-          swiper: thumbBottomSliders.get('thumbBottomSlider_'+thisID),
-        },
-    });
-    return thumbTop;
+function addImgClick(event){
+    var check = files.sizeMaxCheck();
+    if(check == false){
+        return;
+    }
+    $("#inputFile").click();
 }
 
-function createThumbBottomSlider(thisID){
-    var selector = '#'+thisID+" .thumb-bottom";
-    var thumbBottom = new Swiper(selector, {
-        spaceBetween: 10,
-        slidesPerView: 5,
-        freeMode: true,
-        watchSlidesProgress: true,
+function fileChange(event){
+    //파일 선택 후 실행됨
+    //console.log("filechange run");
+
+    var filesArr = Array.prototype.slice.call(event.target.files);
+
+    var blobsrc = "";
+    var count = files.map.size;
+    filesArr.forEach(function(file){
+        //filesArr을 추가했을 때 size가 10개 이하가 되었을때만 map에 추가
+        count++;
+        if(count <= files.cntMax){
+            blobsrc = URL.createObjectURL(file);
+            //Blob 반환. Binary Large Object
+            //blob객체의 url주소값으로 이미지를 불러올 수 있게된다.
+            //이렇게 생성된 주소는 브라우저의 메모리에 올라가있다.
+
+            files.map.set(blobsrc, file);
+            thumbSlider.addSlide(blobsrc);
+        }
     });
-    return thumbBottom;
+    console.log(files.map);
+
+    if(count > files.cntMax){
+        alert("이미지는 10개까지만 업로드 가능합니다. \n 10개 이후의 이미지는 삭제되었습니다.");
+    }
+
+    blobsrc.onload = function(){
+        URL.rejectObjectUrl(blobsrc);
+        //이미지 로딩 후 URL 메모리에서 해제
+    }
 }
 
+function fileRemove(event){
+    var imgsrc = $(event.target).parents(".swiper-slide").children("img").attr("src");
+    files.map.delete(imgsrc);
+    thumbSlider.deleteSlide(thumbSlider.top.activeIndex);
+//    console.log(files.map);
+}

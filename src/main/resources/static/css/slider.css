@@ -32,3 +32,16 @@
 .thumb-slider .swiper.thumb-top .swiper-wrapper .swiper-slide img { object-fit:contain; }
 .thumb-slider .swiper.thumb-bottom .swiper-wrapper .swiper-slide img { object-fit:cover; }
 
+.thumb-slider .swiper.thumb-top .swiper-wrapper .swiper-slide .remove-slide {
+    cursor:pointer;
+}
+.thumb-slider .swiper.thumb-top .swiper-wrapper .swiper-slide .remove-slide i {
+    font-size:25px;
+    padding:3px 7px;
+    position:absolute;
+    right:0px;
+    color:#fffffff5;
+    background-color:rgb(0 0 0 / 50%);
+    border-bottom-left-radius:10px;
+}
+
