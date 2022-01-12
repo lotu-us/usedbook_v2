@@ -12,7 +12,6 @@ function findSubmit(){
         },
         success: function(list){
             //[{"field":"nickname","message":"정보를 확인해주세요."}]
-            console.log(list);
             if(list != "" && list[0].field == "email"){
                 inputClass("email", "red");
                 feedbackClass("find", "block", list[0].message);
