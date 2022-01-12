@@ -37,7 +37,7 @@ function passwordUpdate(){
     var newPassword = $("#newPassword").val();
     var newPasswordConfirm = $("#newPasswordConfirm").val();
 
-    if(newPassword != newPasswordConfirm){
+    if(newPassword != "" && newPassword != newPasswordConfirm){
         feedbackClass("newPasswordConfirm", "block", "비밀번호가 일치하지 않습니다.");
         return;
     }
@@ -53,15 +53,13 @@ function passwordUpdate(){
             "newPassword":newPassword
         }),
         success: function(lists){
-            if(lists.length > 0 && lists[0].field == "oldPassword"){
-                feedbackClass("oldPassword", "block", lists[0].message);
-            }
-            if(lists.length > 0 && lists[0].field == "newPassword"){
-                feedbackClass("oldPassword", "none", null);
-                feedbackClass("newPassword", "block", lists[0].message);
+            initInputs();
+            if(lists.length > 0){
+                lists.forEach(function(list){
+                    feedbackClass(list.field, "block", list.message);
+                });
             }
             if(lists.length == undefined){
-                feedbackClass("newPassword", "none", null);
                 $("#oldPassword").val(newPassword);
                 $("#newPassword").val("");
                 $("#newPasswordConfirm").val("");
@@ -70,6 +68,13 @@ function passwordUpdate(){
         },
         error: function(error){
         }
+    });
+}
+
+function initInputs(){
+    var inputs = ["oldPassword", "newPassword", "newPasswordConfirm"];
+    inputs.forEach(function(input){
+        feedbackClass(input, "none", null);
     });
 }
 
