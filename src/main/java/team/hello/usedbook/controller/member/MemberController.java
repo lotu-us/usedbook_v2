@@ -85,36 +85,14 @@ public class MemberController {
 
     @PostMapping("/findPassword")
     public String findPassword(@ModelAttribute MemberDTO.FindForm findForm, BindingResult bindingResult){
-        List list = findPasswordCheck(findForm, bindingResult);
-        if(list != null){
-            return "member/findPassword";
-        }
-
         Member byEmail = memberRepository.findByEmail(findForm.getEmail());
+
         String tempPassword = memberService.createTempPasswordAndSendMail(byEmail);
         memberRepository.updatePassword(byEmail.getId(), tempPassword);
 
         return "member/findPasswordEmailSend";
     }
 
-    @PostMapping("/findPasswordCheck")
-    @ResponseBody
-    public List findPasswordCheck(@ModelAttribute MemberDTO.FindForm findForm, BindingResult bindingResult){
-        Member byEmail = memberRepository.findByEmail(findForm.getEmail());
-        if(byEmail == null){
-            bindingResult.rejectValue("email", "notExist", "존재하지 않는 이메일입니다.");
-        }else{
-            boolean nickname = byEmail.getNickname().equals(findForm.getNickname());
-            if(!nickname){
-                bindingResult.rejectValue("nickname", "notEqual", "정보를 확인해주세요.");
-            }
-        }
-
-        if(bindingResult.hasErrors()){
-            return new ValidResultList(bindingResult).getList();
-        }
-        return null;
-    }
 
     //=========================================================================================================================================
 

@@ -49,6 +49,21 @@ public class MemberService {
         return list;
     }
 
+    public List<ValidResultList.ValidResult> findPasswordCheck(MemberDTO.FindForm findForm, BindingResult bindingResult) {
+        Member byEmail = memberRepository.findByEmail(findForm.getEmail());
+        if(byEmail == null){
+            bindingResult.rejectValue("email", "notExist", "존재하지 않는 이메일입니다.");
+        }else{
+            boolean nickname = byEmail.getNickname().equals(findForm.getNickname());
+            if(!nickname){
+                bindingResult.rejectValue("nickname", "notEqual", "정보를 확인해주세요.");
+            }
+        }
+
+        List<ValidResultList.ValidResult> list = new ValidResultList(bindingResult).getList();
+        return list;
+    }
+
     /*
 원본 메세지를 알면 암호화된 메세지를 구하기는 쉽지만 암호화된 원본 메세지를 구할 수 없어야 하며 이를 '단방향성'이라고 한다.
 단방향 암호화는 복호화할 수 없는 암호화 방법이다. 복호화란 문자열을 다시 원래 문자열로 돌려놓는 것을 의미한다.

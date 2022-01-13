@@ -42,6 +42,16 @@ public class MemberApiController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @PostMapping("/api/findPasswordCheck")
+    public ResponseEntity findPasswordCheck(@Validated @RequestBody MemberDTO.FindForm findForm, BindingResult bindingResult){
+
+        List<ValidResultList.ValidResult> validResults = memberService.findPasswordCheck(findForm, bindingResult);
+
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 
 
 
