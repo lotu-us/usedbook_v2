@@ -1,23 +1,37 @@
 package team.hello.usedbook.controller.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.MemberDTO;
 import team.hello.usedbook.repository.MemberRepository;
 import team.hello.usedbook.service.MemberService;
 import team.hello.usedbook.utils.ValidResultList;
 
+import java.util.List;
+
 @Controller
 public class MemberApiController {
     @Autowired MemberRepository memberRepository;
     @Autowired MemberService memberService;
+
+    @PostMapping("/api/loginCheck")
+    public ResponseEntity loginCheck(@Validated @RequestBody MemberDTO.LoginForm loginForm, BindingResult bindingResult){
+
+        List<ValidResultList.ValidResult> validResults = memberService.loginCheck(loginForm, bindingResult);
+
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+
 
     @PatchMapping("/api/member/{id}")
     @ResponseBody

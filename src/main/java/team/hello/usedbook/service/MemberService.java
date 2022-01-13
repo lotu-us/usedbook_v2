@@ -2,11 +2,14 @@ package team.hello.usedbook.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.MemberDTO;
 import team.hello.usedbook.repository.MemberRepository;
 import team.hello.usedbook.utils.CustomMailSender;
+import team.hello.usedbook.utils.ValidResultList;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -14,6 +17,23 @@ public class MemberService {
 
     @Autowired MemberRepository memberRepository;
     @Autowired CustomMailSender mailSender;
+
+    public List<ValidResultList.ValidResult> loginCheck(MemberDTO.LoginForm loginForm, BindingResult bindingResult) {
+        //커스텀 오류 추가
+        Member byEmail = memberRepository.findByEmail(loginForm.getEmail());
+        if(byEmail == null){
+            bindingResult.rejectValue("email", "notExist", "존재하지 않는 이메일입니다.");
+        }else{
+            boolean password = byEmail.getPassword().equals(loginForm.getPassword());
+            if(!password){
+                bindingResult.rejectValue("password", "notEqual", "비밀번호를 확인해주세요.");
+            }
+        }
+
+        List<ValidResultList.ValidResult> list = new ValidResultList(bindingResult).getList();
+        return list;
+    }
+
 
     /*
     원본 메세지를 알면 암호화된 메세지를 구하기는 쉽지만 암호화된 원본 메세지를 구할 수 없어야 하며 이를 '단방향성'이라고 한다.
