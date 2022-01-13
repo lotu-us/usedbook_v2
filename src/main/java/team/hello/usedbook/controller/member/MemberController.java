@@ -65,34 +65,11 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public String registerSave(@Validated @ModelAttribute MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
-        List list = registerCheck(registerForm, bindingResult);
-        if(list != null){
-            return "member/register";
-        }
-
+    public String registerSave(@Validated @ModelAttribute MemberDTO.RegisterForm registerForm){
         memberService.registerSave(registerForm);
         return "redirect:/registerOk";
     }
 
-    @PostMapping("/registerCheck")
-    @ResponseBody
-    public List registerCheck(@Validated @ModelAttribute MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
-        Member byEmail = memberRepository.findByEmail(registerForm.getEmail());
-        if(byEmail != null){
-            bindingResult.rejectValue("email", "duplicate", "이미 존재하는 이메일입니다.");
-        }
-
-        Member byNickName = memberRepository.findByNickName(registerForm.getNickname());
-        if(byNickName != null){
-            bindingResult.rejectValue("nickname", "duplicate", "이미 존재하는 닉네임입니다.");
-        }
-
-        if(bindingResult.hasErrors()){
-            return new ValidResultList(bindingResult).getList();
-        }
-        return null;
-    }
 
     @GetMapping("/registerOk")
     public String registerOk(){

@@ -31,6 +31,18 @@ public class MemberApiController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @PostMapping("/api/registerCheck")
+    public ResponseEntity registerCheck(@Validated @RequestBody MemberDTO.RegisterForm registerForm, BindingResult bindingResult){
+
+        List<ValidResultList.ValidResult> validResults = memberService.registerCheck(registerForm, bindingResult);
+
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+
 
 
     @PatchMapping("/api/member/{id}")
