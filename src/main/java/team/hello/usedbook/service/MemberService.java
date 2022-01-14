@@ -111,4 +111,42 @@ public class MemberService {
 
         return tempPassword;
     }
+
+
+    public List<ValidResultList.ValidResult> updateNicknameCheck(Member byId, MemberDTO.UpdateForm updateForm, BindingResult bindingResult) {
+        //현재 닉네임과 같으면 안됨
+        boolean oldnewEqual = byId.getNickname().equals(updateForm.getNickname());
+        if(oldnewEqual){
+            bindingResult.rejectValue("nickname", "notChange", "현재 닉네임과 같습니다");
+        }
+
+        //DB에서 유일한 닉네임이면 수정 가능
+        Member nicknameExists = memberRepository.findByNickName(updateForm.getNickname());
+        if(nicknameExists != null){
+            bindingResult.rejectValue("nickname", "duplicate", "중복되는 닉네임입니다");
+        }
+
+        List<ValidResultList.ValidResult> list = new ValidResultList(bindingResult).getList("nickname");
+        return list;
+    }
+
+
+    public List<ValidResultList.ValidResult> updatePasswordCheck(Member byId, MemberDTO.UpdateForm updateForm, BindingResult bindingResult) {
+
+        //현재 비밀번호가 일치해야함
+        boolean oldPasswordCorrect = updateForm.getOldPassword().equals(byId.getPassword());
+        if(!oldPasswordCorrect){
+            bindingResult.rejectValue("oldPassword", "notEqual", "현재 비밀번호가 일치하지 않습니다");
+            return new ValidResultList(bindingResult).getList("oldPassword");
+        }
+
+        //새 비밀번호는 현재 비밀번호와 같으면 안됨
+        boolean oldnewEqual = byId.getPassword().equals(updateForm.getNewPassword());
+        if(oldnewEqual){
+            bindingResult.rejectValue("newPassword", "notChange", "현재 비밀번호와 같습니다");
+            return new ValidResultList(bindingResult).getList("newPassword");
+        }
+
+        return new ValidResultList(bindingResult).getList("newPassword");
+    }
 }

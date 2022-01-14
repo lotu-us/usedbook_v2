@@ -17,19 +17,19 @@ function nickNameUpdate(){
             "nickname":newNickname
         }),
         success: function(lists){
-            if(lists.length > 0){
-                feedbackClass("nickname", "block", lists[0].message);
-            }else{
-                feedbackClass("nickname", "none", null);
-                $("#nickname").val(newNickname);
-                $(".navbar .login-position a span").text(newNickname);
-                alert("닉네임이 수정되었습니다.");
-            }
+            feedbackClass("nickname", "none", null);
+            $("#nickname").val(newNickname);
+            $(".navbar .login-position a span").text(newNickname);
+            alert("닉네임이 수정되었습니다.");
         },
         error: function(error){
+            var errorList = error.responseJSON;
+            feedbackClass("nickname", "block", errorList[0].message);
         }
     });
 }
+
+
 
 
 function passwordUpdate(){
@@ -52,32 +52,36 @@ function passwordUpdate(){
             "oldPassword":oldPassword,
             "newPassword":newPassword
         }),
-        success: function(lists){
-            initInputs();
-            if(lists.length > 0){
-                lists.forEach(function(list){
-                    feedbackClass(list.field, "block", list.message);
-                });
-            }
-            if(lists.length == undefined){
-                $("#oldPassword").val(newPassword);
-                $("#newPassword").val("");
-                $("#newPasswordConfirm").val("");
-                alert("비밀번호가 수정되었습니다.");
-            }
+        success: function(data){
+            feedbackClass("oldPassword", "none", null);
+            feedbackClass("newPassword", "none", null);
+            $("#oldPassword").val(newPassword);
+            $("#newPassword").val("");
+            $("#newPasswordConfirm").val("");
+            setTimeout("alert('비밀번호가 수정되었습니다.')", 100);
         },
         error: function(error){
+            errorProcess(error.responseJSON);
+            console.clear();    //개발자도구에서 오류 안나오게 할 수 있음
         }
     });
 }
 
-function initInputs(){
-    var inputs = ["oldPassword", "newPassword", "newPasswordConfirm"];
-    inputs.forEach(function(input){
-        feedbackClass(input, "none", null);
-    });
-}
+const fields = ["oldPassword", "newPassword"];
 
+function errorProcess(errorList){
+    for(var i=0; i<fields.length; i++){
+        var findErrorObj = errorList.find((error) => { return error.field == fields[i]; });
+
+        if(findErrorObj != undefined){
+            feedbackClass(findErrorObj.field, "block", findErrorObj.message);
+            break;
+            return false;
+        }else{
+            feedbackClass(fields[i], "none", null);
+        }
+    }
+}
 
 function feedbackClass(selector, display, text){
     if(display == "block"){
@@ -88,7 +92,6 @@ function feedbackClass(selector, display, text){
         $("#"+selector+"Help").css("display", "none");
     }
 }
-
 
 
 //공백제거
