@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -26,7 +27,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,21 +60,18 @@ public class registerCheckTest {
     //http://jsonpath.herokuapp.com/?path=$.store.book[*].author
 
 
-    String uri = "/registerCheck";
+    String uri = "/api/registerCheck";
 
-    private MemberDTO.RegisterForm createForm(String email, String nickname, String password) throws Exception{
+    private String createForm(String email, String nickname, String password) throws Exception{
         MemberDTO.RegisterForm registerForm = new MemberDTO.RegisterForm(email, nickname, password);
-        //return objectMapper.writeValueAsString(registerForm);
-        return registerForm;
+        return objectMapper.writeValueAsString(registerForm);
     }
 
-    private ResultActions mockPerform(MemberDTO.RegisterForm form) throws Exception {
+    private ResultActions mockPerform(String form) throws Exception {
         ResultActions perform = mock.perform(
                 MockMvcRequestBuilders.post(uri)
-                .param("email", form.getEmail())
-                .param("nickname", form.getNickname())
-                .param("password", form.getPassword())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content(form)
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         );
         return perform;
@@ -117,13 +115,14 @@ public class registerCheckTest {
     }
 
     @Test
-    @DisplayName("회원가입 시 아이디 중복, 닉네임 중복")
+    @DisplayName("실패 - 아이디 중복, 닉네임 중복")
     void registerCheck_DuplicateId_DuplicateNickname() throws Exception {
         //given
-        MemberDTO.RegisterForm form = createForm("11@11", "11", "11");
+        String form = createForm("11@11", "11", "11");
 
         //then
         mockPerform(form)
+        .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.[?(@.field == 'email')]").exists())
         .andExpect(jsonPath("$.[?(@.field == 'nickname')]").exists())
         .andExpect(jsonPath("$.[?(@.field == 'password')]").doesNotExist())
@@ -132,17 +131,34 @@ public class registerCheckTest {
     }
 
     @Test
-    @DisplayName("회원가입 시 아이디 중복아님, 닉네임 중복아님")
+    @DisplayName("성공 - 아이디 중복아님, 닉네임 중복아님")
     void registerCheck_NotDuplicateId_NotDuplicateNickname() throws Exception {
         //given
-        MemberDTO.RegisterForm form = createForm("11@13", "13", "11");
+        String form = createForm("11@13", "13", "11");
 
         //then
         mockPerform(form)
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.[?(@.field == 'email')]").doesNotExist())
         .andExpect(jsonPath("$.[?(@.field == 'nickname')]").doesNotExist())
         .andExpect(jsonPath("$.[?(@.field == 'password')]").doesNotExist())
         .andDo(print());
+    }
+
+    @Test
+    @DisplayName("실패 - api를 거치지 않아 잘못된 값이 들어오면 다시 회원가입화면")
+    void registerFail() throws Exception {
+        //given
+        MvcResult mvcResult = mock.perform(
+                MockMvcRequestBuilders.post("/register")
+                        .param("email", "12@")
+                        .param("nickname", "12#3")
+                        .param("password", "1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+        )
+        .andExpect(status().isOk())
+        .andExpect(view().name("member/register"))
+        .andReturn();
     }
 
 }
