@@ -17,7 +17,7 @@ function loginSubmit(){
         }),
         success: function(){
             validUtil.successProcess();
-            $("loginForm").submit();
+            $("#loginForm").submit();
         },
         error:function(error){
             validUtil.errorProcess(error.responseJSON);
