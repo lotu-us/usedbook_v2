@@ -9,6 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private static final String[] whitelist = {"/css/**", "/js/**", "/img/**", "/",
             "/*", "/post/**", "/api/**",
+            "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**",
             "/mybatis",
             "/error"
     };
