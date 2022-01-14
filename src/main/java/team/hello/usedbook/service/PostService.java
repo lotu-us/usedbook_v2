@@ -2,14 +2,17 @@ package team.hello.usedbook.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.PostFile;
 import team.hello.usedbook.domain.dto.PostDTO;
+import team.hello.usedbook.domain.enums.Category;
 import team.hello.usedbook.repository.PostFileRepository;
 import team.hello.usedbook.repository.PostRepository;
+import team.hello.usedbook.utils.ValidResultList;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -18,12 +21,30 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class PostService {
     @Autowired private PostRepository postRepository;
     @Autowired private PostFileRepository postFileRepository;
+
+
+    public List<ValidResultList.ValidResult> postSaveCheck(PostDTO.EditForm editForm, List<MultipartFile> fileList, BindingResult bindingResult) {
+        if(fileList.size() == 0){
+            bindingResult.rejectValue("fileList", "emptyFile", "이미지는 최소 1개 이상 있어야합니다.");
+        }
+
+        try{
+            Category category = Category.valueOf(editForm.getCategory());
+        }catch(IllegalArgumentException e){
+            bindingResult.rejectValue("category", "notExistCategory", "없는 카테고리 입니다.");
+        }
+
+        List<ValidResultList.ValidResult> validResults = new ValidResultList(bindingResult).getList();
+        return validResults;
+    }
+
 
     public Long postSave(HttpSession session, PostDTO.EditForm editForm) {
         Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
@@ -35,7 +56,7 @@ public class PostService {
                 editForm.getContent(),
                 editForm.getPrice(),
                 editForm.getStock(),
-                editForm.getCategory(),
+                Category.valueOf(editForm.getCategory()),
                 createTime
         );
 
@@ -43,11 +64,11 @@ public class PostService {
         return post.getId();
     }
 
-    public void postFileSave(Long postId, PostDTO.EditForm editForm) {
+    public void postFileSave(Long postId, List<MultipartFile> fileList) {
         String uploadPath = Paths.get("D:", "projectEn", "usedbook2", "userUploadImg").toString();
 
         int order = 10;
-        for (MultipartFile multipartFile : editForm.getFileList()) {
+        for (MultipartFile multipartFile : fileList) {
             UUID uuid = UUID.randomUUID();
             String filename = uuid + "_" + order + "_" + multipartFile.getOriginalFilename();
             Path savePath = Paths.get(uploadPath + File.separator + filename).toAbsolutePath();
@@ -72,4 +93,7 @@ public class PostService {
             order--;
         }
     }
+
+
+
 }

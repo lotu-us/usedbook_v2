@@ -7,11 +7,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.repository.PostRepository;
 import team.hello.usedbook.service.PostService;
-import team.hello.usedbook.utils.ValidResultList;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,16 +25,11 @@ public class PostController {
     }
 
     @PostMapping("/post")
-    @ResponseBody
-    public Object writeSave(@Validated @ModelAttribute PostDTO.EditForm editForm, BindingResult bindingResult, HttpSession session){
+    public String writeSave(@Validated @ModelAttribute PostDTO.EditForm editForm, BindingResult bindingResult, HttpSession session){
         if(bindingResult.hasErrors()){
-            return new ValidResultList(bindingResult).getList();
+            return "post/write";
         }
-
-        Long postId = postService.postSave(session, editForm);
-        postService.postFileSave(postId, editForm);
-
-        return null;
+        return "redirect:/posts";
     }
 
     @GetMapping("/posts")
