@@ -29,8 +29,8 @@ public class MemberController {
     @GetMapping("/login")
     public String loginForm(HttpSession session){
         Member member = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
-        if(member != null){
-            return "index";
+        if(member != null){ //세션 있을땐 로그인 화면 접속 못하게
+            return "redirect:/";
         }
         return "member/login";
     }
