@@ -3,4 +3,29 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="team.hello.usedbook.repository.PostRepository">
+    <select id="findAll" resultType="Post" parameterType="team.hello.usedbook.domain.Pagination">
+        select * from post
+        <where>
+            <!-- category에 값이 없어서 and title로 시작하게되어도 where문이 and를 where로 교체해준다! prefix=where과 같음. -->
+            <if test="category != null"> category = #{category} </if>
+            <if test="range == 1">and title = #{text} </if>
+            <if test="range == 2">and writer = #{text} </if>
+            <if test="range == 3">and content = #{text} </if>
+            <if test="range == 4">and title = #{text} or content = #{text} </if>
+        </where>
+        order by #{orderText}
+<!--        <trim prefix="ORDER BY">-->
+<!--            <if test="orderText"> createtime desc </if>-->
+<!--        </trim>-->
+        limit #{postLimit} offset #{postOffset}
+    </select>
+
+    <select id="findAllCount" resultType="int" parameterType="team.hello.usedbook.domain.Pagination">
+        select count(*) from post
+        <choose>
+            <when test="category != null">
+                where category = #{category}
+            </when>
+        </choose>
+    </select>
 </mapper>

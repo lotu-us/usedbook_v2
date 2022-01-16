@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
+import team.hello.usedbook.domain.Pagination;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.PostFile;
 import team.hello.usedbook.domain.dto.PostDTO;
@@ -20,9 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -94,6 +93,17 @@ public class PostService {
         }
     }
 
+    public Map<String, Object> list(String category, Pagination pagination) {
+        pagination.setCategory(category);
+        int categoryCount = postRepository.findAllCount(pagination);
 
+        pagination.init(categoryCount);
+        List<Post> posts = postRepository.findAll(pagination);
 
+        Map<String, Object> result = new HashMap<>();
+        result.put("posts", posts);
+        result.put("pagination", pagination);
+
+        return result;
+    }
 }

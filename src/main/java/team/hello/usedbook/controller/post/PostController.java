@@ -1,11 +1,13 @@
 package team.hello.usedbook.controller.post;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.repository.PostRepository;
@@ -13,6 +15,7 @@ import team.hello.usedbook.service.PostService;
 
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @Controller
 public class PostController {
 
@@ -32,8 +35,9 @@ public class PostController {
         return "redirect:/posts";
     }
 
-    @GetMapping("/posts")
-    public String list(){
+    @GetMapping({"/posts", "/posts/{category}"})
+    public String list(@PathVariable(required = false) String category){
+
         return "post/list";
     }
 }

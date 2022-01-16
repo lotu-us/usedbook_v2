@@ -6,7 +6,7 @@ import lombok.ToString;
 @Getter @ToString
 public class PostFile {
     private Long id;
-    private Long postId;
+    private Long postId;    //post테이블의 id참조 중.   update시 no action, delete시 cascade
     private String filePath;
     private String fileName;
 
