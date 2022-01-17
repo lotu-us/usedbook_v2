@@ -38,7 +38,7 @@ function editFormSubmit(){
         },
         error: function(error){
             errorProcess(error.responseJSON);
-            //console.clear();    //개발자도구에서 오류 안나오게 할 수 있음
+            console.clear();    //개발자도구에서 오류 안나오게 할 수 있음
         }
     });
 
