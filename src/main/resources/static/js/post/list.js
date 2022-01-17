@@ -2,23 +2,30 @@ const baseUrl = window.location.pathname;   //posts    //posts/novel
 const queryString = window.location.search;       //?page=4
 
 $(document).ready(function(){
-    loadList(event);
+    loadList(null, null);
 });
 
 $("#title, #writer, #createtime, #viewcount").on("click", function(){
-    loadList(event);
+    changeClass(this.id, this.className);
+    loadList(this.id, this.className);
 });
 
-function loadList(event){
+function loadList(e_id, e_class){
 
-//    var id = $(event.target).attr("id");
-//    var orderType = $(event.target).attr("class");
+    var orderText = "";
+    if(e_id != null){
+        orderText = "&otext=" + e_id + "&otype=" + e_class;
+    }
 
     $.ajax({
-        url: "/api/"+baseUrl+queryString,
+        url: "/api"+baseUrl+queryString+orderText,
         type: "get",
         success: function(data){
             $(".head h3").text(data.pagination.categoryKor);
+
+            $("table tbody *").replaceWith();
+            $(".pagination *").replaceWith();
+
             $("table tbody").append(addTR(data.posts));
             $(".pagination").append(addPagination(data.pagination));
         },
@@ -39,7 +46,7 @@ function addTR(posts){
                 <th scope="row">${post.id}</th>
                 <td>${post.categoryKor}</td>
                 <td style="text-overflow: ellipsis;">
-                    <a>${post.title}</a><span> (<span>${post.commentCount}</span>)</span>
+                    <a href="/post/detail/${post.id}">${post.title}</a><span> (<span>${post.commentCount}</span>)</span>
                 </td>
                 <td>${post.writer}</td>
                 <td>${post.createTime}</td>
@@ -78,3 +85,14 @@ function addPagination(pagination){
     return result;
 }
 
+
+function changeClass(e_id, e_class){
+    if(e_class == "asc"){
+        $("#"+e_id).removeClass("asc").addClass("desc");
+        $("#"+e_id+" span").text("↓");
+    }
+    if(e_class == "desc"){
+        $("#"+e_id).removeClass("desc").addClass("asc");
+        $("#"+e_id+" span").text("↑");
+    }
+}

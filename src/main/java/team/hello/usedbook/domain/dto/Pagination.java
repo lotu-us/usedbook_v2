@@ -1,4 +1,4 @@
-package team.hello.usedbook.domain;
+package team.hello.usedbook.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,23 +23,27 @@ public class Pagination {
     private boolean prevPage = true;        //이전페이지 여부
     private boolean nextPage = true;        //다음페이지 여부
 
-    //정렬
+    //정렬. 항상 createtime이 정렬된 상태이기위해 otext가 createtime인경우엔 ctype을 변경한다 (2단계정렬)
     @Setter
-    private String orderText = "createtime desc";   //정렬조건
+    private String otext = "";                   //정렬컬럼
+    @Setter
+    private String otype = "";                   //정렬타입
+    private String ctype = "desc";          //createtime 컬럼 type
 
     //검색
     @Setter
     private Category category;
     @Setter
-    private String text;      //검색문자
+    private String stext;      //검색문자
     @Setter
-    private String range;     //검색범위
+    private String srange;     //검색범위
 
 
     public void init(int categoryCount){
         setPostOffset();
         setEndPage(categoryCount);
         setStartEndPrevNextPage();
+        setOrder();
     }
 
     //타임리프 편의메서드
@@ -106,6 +110,12 @@ public class Pagination {
         * */
         if(startPage == 1){
             prevPage = false;
+        }
+    }
+
+    private void setOrder() {
+        if(otext.equals("createtime")){
+            ctype = otype;
         }
     }
 

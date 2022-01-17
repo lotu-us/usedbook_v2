@@ -9,6 +9,7 @@ import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.PostFile;
+import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.domain.enums.Category;
 import team.hello.usedbook.repository.PostFileRepository;
@@ -101,8 +102,6 @@ public class PostService {
         }
     }
 
-
-
     public Map<String, Object> detail(Long postId) {
         Post post = postRepository.findById(postId);
         Map<String, Object> result = new HashMap<>();
@@ -117,6 +116,24 @@ public class PostService {
 
         return result;
     }
+
+
+    public Map<String, Object> list(String category, Pagination pagination) {
+        pagination.setCategory(category);
+        int categoryCount = postRepository.findAllCount(pagination);
+
+        pagination.init(categoryCount);
+        List<Post> posts = postRepository.findAll(pagination);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("posts", posts);
+        result.put("pagination", pagination);
+
+        return result;
+    }
+
+
+
 
 
 

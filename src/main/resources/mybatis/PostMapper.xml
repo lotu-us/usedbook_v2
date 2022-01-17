@@ -3,24 +3,30 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="team.hello.usedbook.repository.PostRepository">
-    <select id="findAll" resultType="Post" parameterType="team.hello.usedbook.domain.Pagination">
+    <select id="findAll" resultType="Post" parameterType="team.hello.usedbook.domain.dto.Pagination">
         select * from post
         <where>
             <!-- category에 값이 없어서 and title로 시작하게되어도 where문이 and를 where로 교체해준다! prefix=where과 같음. -->
             <if test="category != null"> category = #{category} </if>
-            <if test="range == 1">and title = #{text} </if>
-            <if test="range == 2">and writer = #{text} </if>
-            <if test="range == 3">and content = #{text} </if>
-            <if test="range == 4">and title = #{text} or content = #{text} </if>
+            <if test="srange == 1">and title = #{stext} </if>
+            <if test="srange == 2">and writer = #{stext} </if>
+            <if test="srange == 3">and content = #{stext} </if>
+            <if test="srange == 4">and title = #{stext} or content = #{stext} </if>
         </where>
-        order by #{orderText}
-<!--        <trim prefix="ORDER BY">-->
-<!--            <if test="orderText"> createtime desc </if>-->
-<!--        </trim>-->
+        <trim prefix="ORDER BY" prefixOverrides=",">
+            <if test="otext != 'createtime'"> ${otext} ${otype} </if>
+            , createtime ${ctype}
+        </trim>
         limit #{postLimit} offset #{postOffset}
     </select>
+    <!--
+    prefix : 맨 앞에 추가할 단어
+    suffix : 맨 뒤에 추가할 단어
+    prefixOverrides : 가장 처음 들어갈 sql문에서 삭제할 앞 글자
+    suffixOverrides : 가장 뒤에 들어갈 sql문에서 삭제할 뒷 글자
+    -->
 
-    <select id="findAllCount" resultType="int" parameterType="team.hello.usedbook.domain.Pagination">
+    <select id="findAllCount" resultType="int" parameterType="team.hello.usedbook.domain.dto.Pagination">
         select count(*) from post
         <choose>
             <when test="category != null">

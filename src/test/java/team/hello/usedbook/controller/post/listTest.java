@@ -72,13 +72,14 @@ class listTest {
     }
 
 
-    private ResultActions getList(String uri, String page, String range, String text, String orderText) throws Exception {
+    private ResultActions getList(String uri, String page, String srange, String stext, String otext, String otype) throws Exception {
         ResultActions perform = mock.perform(
                 get(uri).session(session)
                 .param("page", page)
-                .param("range", range)
-                .param("text", text)
-                .param("orderText", orderText)
+                .param("srange", srange)
+                .param("stext", stext)
+                .param("otext", otext)
+                .param("otype", otype)
                 .accept(MediaType.APPLICATION_JSON)
         );
         return perform;
@@ -89,7 +90,7 @@ class listTest {
     @DisplayName("성공 - 통합검색 1페이지")
     void list_all_page_1() throws Exception {
         //when //then
-        getList("/api/posts", "", "", "", "")
+        getList("/api/posts", "", "", "", "", "")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.pagination.page").value(1))
         .andExpect(jsonPath("$.pagination.startPage").value(1))
@@ -102,7 +103,7 @@ class listTest {
     @DisplayName("성공 - 통합검색 13페이지")
     void list_all_page_13() throws Exception {
         //when //then
-        getList("/api/posts", "13", "", "", "")
+        getList("/api/posts", "13", "", "", "", "")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.pagination.page").value(13))
         .andExpect(jsonPath("$.pagination.startPage").value(11))
@@ -114,7 +115,7 @@ class listTest {
     @DisplayName("성공 - 페이지가 limitpage의 배수")
     void list_all_page_10() throws Exception {
         //when //then
-        getList("/api/posts", "10", "", "", "")
+        getList("/api/posts", "10", "", "", "", "")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.pagination.page").value(10))
         .andExpect(jsonPath("$.pagination.startPage").value(6))
@@ -126,7 +127,7 @@ class listTest {
     @DisplayName("성공 - 페이지 0일 경우엔 1로 변경처리")
     void list_all_page_0() throws Exception {
         //when //then
-        getList("/api/posts", "0", "", "", "")
+        getList("/api/posts", "0", "", "", "", "")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.pagination.page").value(1))
         .andDo(print());
@@ -136,7 +137,7 @@ class listTest {
     @DisplayName("성공 - 페이지 endPage보다 클 경우엔 endPage로 변경처리")
     void list_all_page_endPage() throws Exception {
         //when //then
-        getList("/api/posts", "1000", "", "", "")
+        getList("/api/posts", "1000", "", "", "", "")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.pagination.page").value(100/5))
         .andDo(print());
