@@ -8,8 +8,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import team.hello.usedbook.domain.Pagination;
+import team.hello.usedbook.domain.Post;
+import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
+import team.hello.usedbook.repository.PostFileRepository;
 import team.hello.usedbook.repository.PostRepository;
 import team.hello.usedbook.service.PostService;
 import team.hello.usedbook.utils.ValidResultList;
@@ -24,6 +26,7 @@ public class PostApiController {
 
     @Autowired private PostService postService;
     @Autowired private PostRepository postRepository;
+    @Autowired private PostFileRepository postFileRepository;
 
     @PostMapping("/post")
     public ResponseEntity writePost(@Validated @RequestPart(value = "jsonData") PostDTO.EditForm editForm, BindingResult bindingResult,
@@ -41,6 +44,30 @@ public class PostApiController {
 
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
+
+    //@PutMapping("/post/{postId}")
+    /*
+    PUT은 특정 리소스를 갱신하는 역할을 하는데 multipart로 보내면 한번에 여러 리소스를 처리하므로 이미지 같은 경우를 PUT으로 처리하려면 이미지등에 대한 리소스 URI에
+    별도의 PUT 요청을 보내서 갱신하고 일반적인 폼은 따로 처리하라는 의미이다. 스펙에 빠삭하지 못해서 정확치는 않지만 이 경우에는 한 URI로 PUT을 보내서
+    여러 리소스(회원 정보 + 이미지)를 한꺼번에 처리하려고 했으므로 PUT이 적합치 않다는 의미로 보인다.
+    * */
+    @PostMapping("/post/{postId}")
+    public ResponseEntity updatePost(@PathVariable Long postId,
+                                     @Validated @RequestPart(value = "jsonData") PostDTO.EditForm editForm, BindingResult bindingResult,
+                                     @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+                                     @RequestPart(value = "removeFileList", required = false) List<String> removeFileList){
+
+        List<ValidResultList.ValidResult> validResults = postService.postSaveCheck(editForm, fileList, bindingResult);
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
+        }
+
+        postService.postUpdate(postId, editForm);
+        postService.postFileUpdate(postId, fileList, removeFileList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
 
     /*
     modelattribute

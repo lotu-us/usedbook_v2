@@ -35,9 +35,19 @@ public class PostController {
         return "redirect:/posts";
     }
 
+    @GetMapping("/post/update/{postid}")
+    public String updateForm(@PathVariable Integer postid){
+        return "post/update";
+    }
+
+    @PostMapping("/post/update/{postid}")
+    public String updateSave(@PathVariable Integer postid){
+        return "redirect:/post/detail/"+postid;
+    }
+
+
     @GetMapping({"/posts", "/posts/{category}"})
     public String list(@PathVariable(required = false) String category){
-
         return "post/list";
     }
 }

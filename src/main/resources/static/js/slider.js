@@ -90,12 +90,15 @@ const thumbSlider = {
 //===================================================================================
 //===================================================================================
 const filesMap = new Map();
+const removeFilesArr = new Array();
 const files = {
     map: filesMap,
-    init : function(){
-        var imgs = $(".thumb-top .swiper-slide img");
-        for(var i=0; i<imgs.length; i++){
-            this.map.set(imgs[i].src, imgs[i].src);
+    removeArr: removeFilesArr,
+    init : function(postFileNames){
+        for(var i=0; i<postFileNames.length; i++){
+            var url = "/api/image/"+postFileNames[i];
+            this.map.set(postFileNames[i], "downloadImage");
+            thumbSlider.addSlide(url);
         }
     },
     cntMin: 1,
@@ -115,14 +118,10 @@ const files = {
 }
 
 $(document).ready(function(){
-    files.init();
+    //files.init();
     thumbSlider.init();
-//    console.log(files.map);
 });
-//$(window).on("load", function(){
-//    files.init();
-//    thumbSlider.init();
-//});
+
 
 function addImgClick(event){
     var check = files.sizeMaxCheck();
@@ -167,7 +166,10 @@ function fileChange(event){
 
 function fileRemove(event){
     var imgsrc = $(event.target).parents(".swiper-slide").children("img").attr("src");
+    imgsrc = imgsrc.replace("/api/image/", "");
     files.map.delete(imgsrc);
     thumbSlider.deleteSlide(thumbSlider.top.activeIndex);
+
+    files.removeArr.push(imgsrc);
 //    console.log(files.map);
 }

@@ -24,4 +24,13 @@ public interface PostRepository {
 
     //PostMapper.xml 파일 참고
     int findAllCount(Pagination pagination);
+
+    @Update("update post set title=#{post.title}, content=#{post.content}, price=#{post.price}, stock=#{post.stock}, category=#{post.category}, salestatus=#{post.saleStatus} " +
+            "where id=#{postId}")
+    int update(@Param("postId") Long postId, @Param("post") Post post);
+
+    @Select("select * from post where id=#{postId}")
+    Post findById(Long postId);
+
+
 }

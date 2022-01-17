@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
+import team.hello.usedbook.config.FileConstants;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
-import team.hello.usedbook.domain.Pagination;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.PostFile;
 import team.hello.usedbook.domain.dto.PostDTO;
@@ -18,6 +18,8 @@ import team.hello.usedbook.utils.ValidResultList;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -30,8 +32,10 @@ public class PostService {
 
 
     public List<ValidResultList.ValidResult> postSaveCheck(PostDTO.EditForm editForm, List<MultipartFile> fileList, BindingResult bindingResult) {
-        if(fileList.size() == 0){
-            bindingResult.rejectValue("fileList", "emptyFile", "이미지는 최소 1개 이상 있어야합니다.");
+        if(fileList != null){
+            if(fileList.size() == 0){
+                bindingResult.rejectValue("fileList", "emptyFile", "이미지는 최소 1개 이상 있어야합니다.");
+            }
         }
 
         try{
@@ -64,12 +68,48 @@ public class PostService {
     }
 
     public void postFileSave(Long postId, List<MultipartFile> fileList) {
-        String uploadPath = Paths.get("D:", "projectEn", "usedbook2", "userUploadImg").toString();
+        String uploadPath = FileConstants.userUploadImgPath;
+        fileSave(postId, fileList, uploadPath);
+    }
 
-        int order = 10;
+
+    public void postUpdate(Long postId, PostDTO.EditForm editForm) {
+        String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        Post post = new Post(
+                null,
+                editForm.getTitle(),
+                editForm.getContent(),
+                editForm.getPrice(),
+                editForm.getStock(),
+                Category.valueOf(editForm.getCategory()),
+                createTime
+        );
+
+        postRepository.update(postId, post);
+    }
+
+    public void postFileUpdate(Long postId, List<MultipartFile> fileList, List<String> removeFileList) {
+        String uploadPath = FileConstants.userUploadImgPath;
+
+        if(removeFileList != null){
+            fileRemove(postId, removeFileList, uploadPath);
+        }
+
+        if(fileList != null){   //파일을 추가로 업로드한 것이 있을 때
+            fileSave(postId, fileList, uploadPath);
+        }
+    }
+
+
+
+
+
+
+    private void fileSave(Long postId, List<MultipartFile> fileList, String uploadPath){
         for (MultipartFile multipartFile : fileList) {
             UUID uuid = UUID.randomUUID();
-            String filename = uuid + "_" + order + "_" + multipartFile.getOriginalFilename();
+            String filename = uuid + "_" + multipartFile.getOriginalFilename();
             Path savePath = Paths.get(uploadPath + File.separator + filename).toAbsolutePath();
 
             try {
@@ -89,21 +129,19 @@ public class PostService {
             );
 
             postFileRepository.save(postFile);
-            order--;
         }
     }
 
-    public Map<String, Object> list(String category, Pagination pagination) {
-        pagination.setCategory(category);
-        int categoryCount = postRepository.findAllCount(pagination);
+    private void fileRemove(Long postId, List<String> removeFileList, String uploadPath) {
+        for (String removeFileName : removeFileList) {
+            String fileName = URLDecoder.decode(removeFileName, StandardCharsets.UTF_8);
+            postFileRepository.removeFile(postId, fileName);
 
-        pagination.init(categoryCount);
-        List<Post> posts = postRepository.findAll(pagination);
+            File file = new File(uploadPath + File.separator + removeFileName);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("posts", posts);
-        result.put("pagination", pagination);
-
-        return result;
+            if(file.exists()){
+                file.delete();
+            }
+        }
     }
 }
