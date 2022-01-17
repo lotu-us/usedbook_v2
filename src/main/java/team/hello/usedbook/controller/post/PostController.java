@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.repository.PostRepository;
 import team.hello.usedbook.service.PostService;
@@ -43,6 +40,11 @@ public class PostController {
     @PostMapping("/post/update/{postid}")
     public String updateSave(@PathVariable Integer postid){
         return "redirect:/post/detail/"+postid;
+    }
+
+    @GetMapping("/post/detail/{postid}")
+    public String detailForm(@PathVariable Integer postid){
+        return "post/detail";
     }
 
 

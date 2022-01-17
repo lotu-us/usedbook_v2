@@ -1,11 +1,9 @@
 package team.hello.usedbook.repository;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Post;
-import team.hello.usedbook.domain.Pagination;
+import team.hello.usedbook.domain.dto.Pagination;
 
 import java.util.List;
 
@@ -32,5 +30,6 @@ public interface PostRepository {
     @Select("select * from post where id=#{postId}")
     Post findById(Long postId);
 
-
+    @Delete("delete from post where id=#{postId}")
+    int deleteById(Long postId);
 }

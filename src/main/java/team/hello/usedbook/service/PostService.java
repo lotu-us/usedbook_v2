@@ -103,6 +103,22 @@ public class PostService {
 
 
 
+    public Map<String, Object> detail(Long postId) {
+        Post post = postRepository.findById(postId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", post);
+
+        List<PostFile> postFiles = postFileRepository.findById(postId);
+        List<String> postFileNames = new ArrayList<>();
+        for (PostFile postFile : postFiles) {
+            postFileNames.add(postFile.getFileName());
+        }
+        result.put("postFileNames", postFileNames);
+
+        return result;
+    }
+
+
 
 
 
