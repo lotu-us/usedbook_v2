@@ -55,7 +55,7 @@ public class PostService {
         String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
         Post post = new Post(
-                loginMember.getEmail(),
+                loginMember.getNickname(),
                 editForm.getTitle(),
                 editForm.getContent(),
                 editForm.getPrice(),

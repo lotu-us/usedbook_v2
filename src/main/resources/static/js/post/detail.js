@@ -26,6 +26,7 @@ function loadPost(){
 
 function replacePost(post){
     document.querySelector("#title").innerHTML = post.title;
+    document.querySelector("#writer").innerHTML = post.writer;
     document.querySelector("#category").innerHTML = post.categoryKor;
     document.querySelector("#price").innerHTML = post.price;
     document.querySelector("#stock").innerHTML = post.stock;
