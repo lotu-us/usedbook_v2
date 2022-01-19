@@ -76,15 +76,12 @@ public class PostService {
 
     public void postUpdate(Long postId, PostDTO editForm) {
         Post post = new Post(
-                null,
                 editForm.getTitle(),
                 editForm.getContent(),
                 editForm.getPrice(),
                 editForm.getStock(),
-                Category.valueOf(editForm.getCategory()),
-                createTime
+                Category.valueOf(editForm.getCategory())
         );
-
         postRepository.update(postId, post);
     }
 

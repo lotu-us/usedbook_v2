@@ -26,6 +26,14 @@ public class Post {
 
     }
 
+    public Post(String title, String content, int price, int stock, Category category) {
+        this.title = title;
+        this.content = content;
+        this.price = price;
+        this.stock = stock;
+        this.category = category;
+    }
+
     public Post(String writer, String title, String content, int price, int stock, Category category, String createTime) {
         this.writer = writer;
         this.title = title;
