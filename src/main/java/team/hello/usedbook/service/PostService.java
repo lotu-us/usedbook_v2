@@ -172,4 +172,8 @@ public class PostService {
             }
         }
     }
+
+    public void addCommentCount(Long postId, int commentCount) {
+        postRepository.addCommentCount(postId, commentCount);
+    }
 }

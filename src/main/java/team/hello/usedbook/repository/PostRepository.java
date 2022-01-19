@@ -32,4 +32,7 @@ public interface PostRepository {
 
     @Delete("delete from post where id=#{postId}")
     int deleteById(Long postId);
+
+    @Update("update post set commentcount=#{commentCount} where id=#{postId}")
+    void addCommentCount(Long postId, int commentCount);
 }
