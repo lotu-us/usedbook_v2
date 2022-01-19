@@ -72,7 +72,7 @@ class writeTest {
     String uri = "/api/post";
 
     private MockMultipartFile createForm(String title, String category, Integer price, Integer stock, String content) throws Exception{
-        PostDTO.EditForm editForm = new PostDTO.EditForm(title, category, price, stock, content);
+        PostDTO editForm = new PostDTO(title, category, price, stock, content);
         String form = objectMapper.writeValueAsString(editForm);
         MockMultipartFile jsonData = new MockMultipartFile("jsonData", "jsonData", MediaType.APPLICATION_JSON_VALUE, form.getBytes(StandardCharsets.UTF_8));
         return jsonData;

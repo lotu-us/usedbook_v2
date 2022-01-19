@@ -29,9 +29,9 @@ public class PostApiController {
     @Autowired private PostFileRepository postFileRepository;
 
     @PostMapping("/post")
-    public ResponseEntity writePost(@Validated @RequestPart(value = "jsonData") PostDTO.EditForm editForm, BindingResult bindingResult,
+    public ResponseEntity writePost(@Validated @RequestPart(value = "jsonData") PostDTO editForm, BindingResult bindingResult,
                                     @RequestPart(value = "fileList") List<MultipartFile> fileList, HttpSession session){
-        //@Validated @RequestBody PostDTO.EditForm editForm, BindingResult bindingResult, HttpSession session){
+        //@Validated @RequestBody PostDTO editForm, BindingResult bindingResult, HttpSession session){
         // Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content type 'multipart/form-data;boundary
 
         List<ValidResultList.ValidResult> validResults = postService.postSaveCheck(editForm, fileList, bindingResult);
@@ -53,7 +53,7 @@ public class PostApiController {
     * */
     @PostMapping("/post/{postId}")
     public ResponseEntity updatePost(@PathVariable Long postId,
-                                     @Validated @RequestPart(value = "jsonData") PostDTO.EditForm editForm, BindingResult bindingResult,
+                                     @Validated @RequestPart(value = "jsonData") PostDTO editForm, BindingResult bindingResult,
                                      @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
                                      @RequestPart(value = "removeFileList", required = false) List<String> removeFileList){
 
@@ -109,6 +109,8 @@ public class PostApiController {
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
+
 
 
 }

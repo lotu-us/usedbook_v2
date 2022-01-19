@@ -25,7 +25,7 @@ public class PostController {
     }
 
     @PostMapping("/post")
-    public String writeSave(@Validated @ModelAttribute PostDTO.EditForm editForm, BindingResult bindingResult, HttpSession session){
+    public String writeSave(@Validated @ModelAttribute PostDTO editForm, BindingResult bindingResult, HttpSession session){
         if(bindingResult.hasErrors()){
             return "post/write";
         }
