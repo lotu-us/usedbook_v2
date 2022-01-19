@@ -15,7 +15,6 @@ public class Pagination {
     private int postLimit = 5;      //출력할 행의 개수
 
     //페이징
-    @Setter
     private int page = 1;               //현재페이지
     private int startPage;                  //출력할 페이지 시작 번호
     private int endPage;                    //출력할 페이지 마지막 번호
@@ -31,7 +30,6 @@ public class Pagination {
     private String ctype = "desc";          //createtime 컬럼 type
 
     //검색
-    @Setter
     private Category category;
     @Setter
     private String stext;      //검색문자
