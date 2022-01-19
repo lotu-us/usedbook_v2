@@ -52,7 +52,11 @@ public class Post {
 //        }
 
         //2022-01-15 00:00:54.0 -> 22-01-15 00:00
-        return createTime.substring(2, createTime.length()-5);
+        if (createTime.length() == 21) {
+            return createTime.substring(2, createTime.length() - 5);
+            //DB에 저장될때도 substring되어서 저장되어버림.. 뷰에서 가져올때만 처리되도록
+        }
+        return createTime;
     }
 
     //타임리프 편의메서드
