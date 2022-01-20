@@ -16,9 +16,10 @@
             <p style="font-size:1.8em;">중고서적거래 커뮤니티</p>
             <p style="font-size:1.5em;">📖책방</p>
         </div>
-        <form id="searchForm">
+        <form id="searchForm" th:action="@{/posts(srange=${param.srange}, stext=${param.stext}) }" method="get">
             <div class="inputbox">
-                <input type="text" name="searchText" placeholder="제목을 검색해주세요">
+                <input type="hidden" name="srange" value="1">
+                <input type="text" name="stext" placeholder="제목을 검색해주세요">
             </div>
         </form>
     </div>
