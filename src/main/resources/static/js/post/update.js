@@ -26,12 +26,17 @@ function loadPost(){
 function replacePost(post){
     document.querySelector("#title").value = post.title;
     document.querySelectorAll("#category option").forEach(function(option){
-        if(option.value == post.category){
+        if(option.innerHTML == post.category){
             option.selected = true;
         }
     });
     document.querySelector("#price").value = post.price;
     document.querySelector("#stock").value = post.stock;
+    document.querySelectorAll("#saleStatus option").forEach(function(option){
+        if(option.innerHTML == post.saleStatus){
+            option.selected = true;
+        }
+    });
     document.querySelector("#content").value = post.content;
 }
 
@@ -48,7 +53,7 @@ function replacePostFiles(postFileNames){
 
 
 //write.js와 유사
-const fields = ["title", "category", "price", "stock", "content", "fileList"];
+const fields = ["title", "category", "price", "stock", "saleStatus", "content", "fileList"];
 
 function editFormSubmit(){
     //이미지 체크 (slider.js)
@@ -74,6 +79,7 @@ function editFormSubmit(){
         "category" : $.trim($("#category option:selected").val()),
         "price" : $.trim($("#price").val()),
         "stock" : $.trim($("#stock").val()),
+        "saleStatus" : $.trim($("#saleStatus option:selected").val()),
         "content" : $.trim($("#content").val())
     }
     formData.append("jsonData", new Blob([JSON.stringify(data)] , {type: "application/json"}));

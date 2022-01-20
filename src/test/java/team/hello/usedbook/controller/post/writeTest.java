@@ -23,6 +23,7 @@ import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.domain.enums.Category;
+import team.hello.usedbook.domain.enums.SaleStatus;
 import team.hello.usedbook.repository.MemberRepository;
 
 import java.io.IOException;
@@ -71,8 +72,8 @@ class writeTest {
 
     String uri = "/api/post";
 
-    private MockMultipartFile createForm(String title, String category, Integer price, Integer stock, String content) throws Exception{
-        PostDTO editForm = new PostDTO(title, category, price, stock, content);
+    private MockMultipartFile createForm(String title, String category, Integer price, Integer stock, String saleStatus, String content) throws Exception{
+        PostDTO.EditForm editForm = new PostDTO.EditForm(title, category, price, stock, saleStatus, content);
         String form = objectMapper.writeValueAsString(editForm);
         MockMultipartFile jsonData = new MockMultipartFile("jsonData", "jsonData", MediaType.APPLICATION_JSON_VALUE, form.getBytes(StandardCharsets.UTF_8));
         return jsonData;
@@ -84,7 +85,7 @@ class writeTest {
     @Transactional  //테스트 끝난 후 자동 rollback
     void writePostSuccess() throws Exception {
         //given
-        MockMultipartFile jsonData = createForm("제목", Category.HUMANITIES.toString(), 2200, 10, "내용");
+        MockMultipartFile jsonData = createForm("제목", Category.HUMANITIES.toString(), 2200, 10, SaleStatus.READY.toString(), "내용");
 
         //when //then
         mock.perform(
@@ -108,7 +109,7 @@ class writeTest {
     @Transactional  //테스트 끝난 후 자동 rollback
     void writeFail_empty_all_except_file() throws Exception {
         //given
-        MockMultipartFile jsonData = createForm("", "", null, null, "");
+        MockMultipartFile jsonData = createForm("", "", null, null, SaleStatus.READY.toString(), "");
 
         //when //then
         mock.perform(
@@ -131,7 +132,7 @@ class writeTest {
     @Transactional  //테스트 끝난 후 자동 rollback
     void writeFail_empty_all() throws Exception {
         //given
-        MockMultipartFile jsonData = createForm("", "", null, null, "");
+        MockMultipartFile jsonData = createForm("", "", null, null, SaleStatus.READY.toString(), "");
 
         //when //then
         mock.perform(
@@ -148,7 +149,7 @@ class writeTest {
     @Transactional  //테스트 끝난 후 자동 rollback
     void writeFail_valid() throws Exception {
         //given
-        MockMultipartFile jsonData = createForm("12테스트test!@", "ㅎㅎ", 10, 101, "12테스트test!@");
+        MockMultipartFile jsonData = createForm("12테스트test!@", "ㅎㅎ", 10, 101, SaleStatus.READY.toString(), "12테스트test!@");
 
         //when //then
         mock.perform(

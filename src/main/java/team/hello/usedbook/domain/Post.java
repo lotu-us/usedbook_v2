@@ -26,11 +26,12 @@ public class Post {
 
     }
 
-    public Post(String title, String content, int price, int stock, Category category) {
+    public Post(String title, String content, int price, int stock, SaleStatus saleStatus ,Category category) {
         this.title = title;
         this.content = content;
         this.price = price;
         this.stock = stock;
+        this.saleStatus = saleStatus;
         this.category = category;
     }
 

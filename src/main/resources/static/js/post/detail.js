@@ -27,9 +27,10 @@ function loadPost(){
 function replacePost(post){
     document.querySelector("#title").innerHTML = post.title;
     document.querySelector("#writer").innerHTML = post.writer;
-    document.querySelector("#category").innerHTML = post.categoryKor;
+    document.querySelector("#category").innerHTML = post.category;
     document.querySelector("#price").innerHTML = post.price;
     document.querySelector("#stock").innerHTML = post.stock;
+    document.querySelector("#salestatus").innerHTML = post.saleStatus;
     document.querySelector("#content").innerHTML = post.content;
     document.querySelector("#likeCount").innerHTML = post.likeCount;
     document.querySelector("#viewCount").innerHTML = post.viewCount;

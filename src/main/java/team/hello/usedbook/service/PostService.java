@@ -12,6 +12,7 @@ import team.hello.usedbook.domain.PostFile;
 import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.domain.enums.Category;
+import team.hello.usedbook.domain.enums.SaleStatus;
 import team.hello.usedbook.repository.PostFileRepository;
 import team.hello.usedbook.repository.PostRepository;
 import team.hello.usedbook.utils.ValidResultList;
@@ -25,6 +26,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static team.hello.usedbook.domain.dto.PostDTO.Response.ListPostToListDto;
 
 @Service
 public class PostService {
@@ -80,6 +83,7 @@ public class PostService {
                 editForm.getContent(),
                 editForm.getPrice(),
                 editForm.getStock(),
+                SaleStatus.valueOf(editForm.getSaleStatus()),
                 Category.valueOf(editForm.getCategory())
         );
         postRepository.update(postId, post);
