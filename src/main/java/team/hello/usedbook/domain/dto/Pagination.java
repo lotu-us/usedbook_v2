@@ -15,6 +15,7 @@ public class Pagination {
     private int postLimit = 5;      //출력할 행의 개수
 
     //페이징
+    //setter
     private int page = 1;               //현재페이지
     private int startPage;                  //출력할 페이지 시작 번호
     private int endPage;                    //출력할 페이지 마지막 번호
@@ -30,6 +31,7 @@ public class Pagination {
     private String ctype = "desc";          //createtime 컬럼 type
 
     //검색
+    //setter
     private Category category;
     @Setter
     private String stext;      //검색문자
@@ -66,9 +68,14 @@ public class Pagination {
         // 7 / 5 = 1 ...2
         // 5 / 5 = 1
         // 3 / 5 = 0 ...3 만약 나머지가 있다면 +1 처리
+
         endPage = categoryAndSearchCount / postLimit;
         if(categoryAndSearchCount % postLimit != 0){
             endPage = endPage + 1;
+        }
+
+        if(categoryAndSearchCount == 0){
+            endPage = 1;
         }
 
         pageGreaterThanEndPage();
@@ -123,14 +130,12 @@ public class Pagination {
         }
     }
 
-    public void setPage(String page) {
-        if(!page.isBlank()){
-            this.page = Integer.parseInt(page);
-        }
-
-        if(this.page <= 0){
+    public void setPage(int page) {
+        //page파라미터가 있을때만 실행됨
+        if(page <= 0 ){
             this.page = 1;
         }
+        this.page = page;
     }
 
     private void pageGreaterThanEndPage(){
