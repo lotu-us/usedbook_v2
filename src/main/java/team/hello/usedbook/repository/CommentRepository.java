@@ -3,6 +3,9 @@ package team.hello.usedbook.repository;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Comment;
+import team.hello.usedbook.domain.Member;
+import team.hello.usedbook.domain.dto.CommentDTO;
+import team.hello.usedbook.domain.dto.Pagination;
 
 import java.util.List;
 
@@ -32,4 +35,10 @@ public interface CommentRepository {
 
     @Select("select count(*) from comment where postid=#{postId}")
     int findByPostId(Long postId);
+
+    @Select("select count(*) from comment where writer=#{nickname}")
+    int findAllForDashboardCount(Member loginMember);
+
+    //mapper 참고
+    List<CommentDTO.DashboardResponse> findAllForDashboard(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
 }

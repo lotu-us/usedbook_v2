@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import team.hello.usedbook.domain.Comment;
 import team.hello.usedbook.domain.dto.CommentDTO;
+import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.repository.CommentRepository;
 import team.hello.usedbook.service.CommentService;
 import team.hello.usedbook.service.PostService;
@@ -32,7 +33,7 @@ public class CommentApiController {
     }
 
     @PostMapping("/comment/{postId}")
-    public ResponseEntity commentSave(@PathVariable Long postId, @Validated @RequestBody CommentDTO commentForm, BindingResult bindingResult, HttpSession session){
+    public ResponseEntity commentSave(@PathVariable Long postId, @Validated @RequestBody CommentDTO.EditForm commentForm, BindingResult bindingResult, HttpSession session){
         List<ValidResultList.ValidResult> validResults = commentService.commentSaveCheck(commentForm, bindingResult);
         if(bindingResult.hasErrors()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
@@ -71,5 +72,12 @@ public class CommentApiController {
 
         int delete = commentRepository.viewStatusChange(postId, commentId);
         return ResponseEntity.status(HttpStatus.OK).body(delete);
+    }
+
+    @GetMapping("/dashboard/myComments")
+    public ResponseEntity dashboardGetMyComments(HttpSession session, @ModelAttribute Pagination pagination){
+
+        Map<String, Object> result = commentService.dashboardGetMyComments(session, pagination);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

@@ -65,7 +65,7 @@ class commentTest {
     }
 
     private String createForm(Long postId, String content, Long parentId, int depth) throws Exception{
-        CommentDTO commentDTO = new CommentDTO();
+        CommentDTO.EditForm commentDTO = new CommentDTO.EditForm();
         commentDTO.setPostId(postId);
         commentDTO.setContent(content);
         commentDTO.setParentId(parentId);
