@@ -110,7 +110,13 @@ public class PostApiController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @GetMapping("/posts/allCategoryListForIndex")
+    public ResponseEntity allCategoryListForIndex(@RequestParam int count){
 
+        Map<String, Object> result = postService.allCategoryListForIndex(count);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 
 
 }

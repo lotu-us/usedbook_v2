@@ -1,8 +1,10 @@
 var cardSliders = new Map();
-$('.card-slider').each(function(i) {
-    var thisID = $(this).attr("id");
-    cardSliders.set('cardSlider_'+thisID, createCardSlider(thisID));
-});
+function initCardSlider(){
+    $('.card-slider').each(function(i) {
+        var thisID = $(this).attr("id");
+        cardSliders.set('cardSlider_'+thisID, createCardSlider(thisID));
+    });
+}
 
 function createCardSlider(thisID){
     var selector = '#'+thisID+" .swiper";

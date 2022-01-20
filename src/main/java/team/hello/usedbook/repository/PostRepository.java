@@ -35,4 +35,8 @@ public interface PostRepository {
 
     @Update("update post set commentcount=#{commentCount} where id=#{postId}")
     void addCommentCount(Long postId, int commentCount);
+
+    @Select("select * from post where category=#{lowerCategory} order by createtime desc limit #{count} offset 0")
+    List<Post> findAllForIndex(String lowerCategory, int count);
+
 }

@@ -134,9 +134,40 @@ public class PostService {
         return result;
     }
 
+    public Map<String, Object> allCategoryListForIndex(int count) {
+        Map<String, Object> result = new HashMap<>();
 
+        Category[] values = Category.values();
+        for (Category value : values) {
 
+            String lowerCategory = value.toString().toLowerCase();
+            List<Post> posts = postRepository.findAllForIndex(lowerCategory, count);
 
+            List<String> postFileNames = new ArrayList<>();
+            for (Post post : posts) {
+                List<PostFile> postFiles = postFileRepository.findById(post.getId());
+                if(postFiles.size() == 0){  //테스트로 파일 저장안한것들 오류발생안하게..
+                    postFileNames.add("파일없음");
+                }else{
+                    postFileNames.add(postFiles.get(0).getFileName());
+                }
+            }
+
+            Map<String, Object> map = new HashMap<>();
+
+            List<PostDTO.Response> responses = ListPostToListDto(posts);
+            map.put("posts", responses);
+            map.put("postFileNames", postFileNames);
+
+            result.put(lowerCategory, map);
+        }
+
+        return result;
+    }
+
+    public void addCommentCount(Long postId, int commentCount) {
+        postRepository.addCommentCount(postId, commentCount);
+    }
 
 
 

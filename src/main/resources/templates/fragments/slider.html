@@ -10,20 +10,10 @@
 </head>
 <body>
 
-<div th:id="${id}" class="card-slider" th:fragment="card-slider(id, list)">
+<div th:id="${id}" class="card-slider" th:fragment="card-slider(id)">
     <div class="swiper">
         <div class="swiper-wrapper">
-<!--        <th:block th:each="post : ${list}">-->
-            <th:block th:each="num : ${#numbers.sequence(1,5)}">
-            <div class="swiper-slide">
-                <img class="swiper-lazy" src="https://plchldr.co/i/245x180">
-                <div class="card-body">
-                    <span th:text="${num}">책제목</span><br>
-                    <span>상태</span><br>
-                    <span>가격</span>
-                </div>
-            </div>
-            </th:block>
+
         </div>
 
         <!-- If we need navigation buttons -->
