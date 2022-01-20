@@ -32,7 +32,7 @@ public class PostService {
     @Autowired private PostFileRepository postFileRepository;
 
 
-    public List<ValidResultList.ValidResult> postSaveCheck(PostDTO editForm, List<MultipartFile> fileList, BindingResult bindingResult) {
+    public List<ValidResultList.ValidResult> postSaveCheck(PostDTO.EditForm editForm, List<MultipartFile> fileList, BindingResult bindingResult) {
         if(fileList != null){
             if(fileList.size() == 0){
                 bindingResult.rejectValue("fileList", "emptyFile", "이미지는 최소 1개 이상 있어야합니다.");
@@ -50,7 +50,7 @@ public class PostService {
     }
 
 
-    public Long postSave(HttpSession session, PostDTO editForm) {
+    public Long postSave(HttpSession session, PostDTO.EditForm editForm) {
         Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
         String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
@@ -74,7 +74,7 @@ public class PostService {
     }
 
 
-    public void postUpdate(Long postId, PostDTO editForm) {
+    public void postUpdate(Long postId, PostDTO.EditForm editForm) {
         Post post = new Post(
                 editForm.getTitle(),
                 editForm.getContent(),
@@ -99,8 +99,10 @@ public class PostService {
 
     public Map<String, Object> detail(Long postId) {
         Post post = postRepository.findById(postId);
+        PostDTO.Response postRes = new PostDTO.Response(post);
+
         Map<String, Object> result = new HashMap<>();
-        result.put("post", post);
+        result.put("post", postRes);
 
         List<PostFile> postFiles = postFileRepository.findById(postId);
         List<String> postFileNames = new ArrayList<>();
@@ -119,9 +121,10 @@ public class PostService {
 
         pagination.init(categoryAndSearchCount);
         List<Post> posts = postRepository.findAll(pagination);
+        List<PostDTO.Response> responses = ListPostToListDto(posts);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("posts", posts);
+        result.put("posts", responses);
         result.put("pagination", pagination);
 
         return result;

@@ -50,7 +50,7 @@ function addTR(posts){
         result = result + `
             <tr>
                 <th scope="row">${post.id}</th>
-                <td>${post.categoryKor}</td>
+                <td>${post.category}</td>
                 <td style="text-overflow: ellipsis;">
                     <a href="/post/detail/${post.id}">${post.title}</a><span> (<span>${post.commentCount}</span>)</span>
                 </td>
