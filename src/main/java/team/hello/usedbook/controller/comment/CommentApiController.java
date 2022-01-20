@@ -42,8 +42,7 @@ public class CommentApiController {
         Comment comment = commentRepository.findById(commentId);
 
         //추가된 상태
-        int commentCount = commentRepository.findByPostId(postId);
-        postService.addCommentCount(postId, commentCount);
+        postService.addCommentCount(postId);
 
         return ResponseEntity.status(HttpStatus.OK).body(comment);
     }

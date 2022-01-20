@@ -102,6 +102,9 @@ public class PostService {
     }
 
     public Map<String, Object> detail(Long postId) {
+        //조회수 업데이트
+        addViewCount(postId);
+
         Post post = postRepository.findById(postId);
         PostDTO.Response postRes = new PostDTO.Response(post);
 
@@ -117,7 +120,6 @@ public class PostService {
 
         return result;
     }
-
 
     public Map<String, Object> list(String category, Pagination pagination) {
         pagination.setCategory(category);
@@ -165,10 +167,13 @@ public class PostService {
         return result;
     }
 
-    public void addCommentCount(Long postId, int commentCount) {
-        postRepository.addCommentCount(postId, commentCount);
+    public void addCommentCount(Long postId) {
+        postRepository.addCommentCount(postId);
     }
 
+    private void addViewCount(Long postId) {
+        postRepository.addViewCount(postId);
+    }
 
 
 
