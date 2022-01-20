@@ -211,7 +211,22 @@ public class PostService {
         }
     }
 
-    public void addCommentCount(Long postId, int commentCount) {
-        postRepository.addCommentCount(postId, commentCount);
+
+    public Map<String, Object> dashboardGetMyPosts(HttpSession session, Pagination pagination) {
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+
+        pagination.setCategory(null);
+        int count = postRepository.findAllForDashboardCount(loginMember);
+
+        pagination.init(count);
+        List<Post> posts = postRepository.findAllForDashboard(loginMember, pagination);
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<PostDTO.Response> responses = ListPostToListDto(posts);
+        result.put("posts", responses);
+        result.put("pagination", pagination);
+
+        return result;
     }
 }

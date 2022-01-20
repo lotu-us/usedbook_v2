@@ -119,4 +119,11 @@ public class PostApiController {
     }
 
 
+    @GetMapping("/dashboard/myPosts")
+    public ResponseEntity dashboardGetMyPosts(HttpSession session, @ModelAttribute Pagination pagination){
+
+        Map<String, Object> result = postService.dashboardGetMyPosts(session, pagination);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }
