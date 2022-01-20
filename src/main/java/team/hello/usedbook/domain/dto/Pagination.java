@@ -37,9 +37,9 @@ public class Pagination {
     private String srange;     //검색범위
 
 
-    public void init(int categoryCount){
+    public void init(int categoryAndSearchCount){
         setPostOffset();
-        setEndPage(categoryCount);
+        setEndPage(categoryAndSearchCount);
         setStartEndPrevNextPage();
         setOrder();
     }
@@ -61,13 +61,13 @@ public class Pagination {
         postOffset = (page -1)*limitPage;
     }
 
-    private void setEndPage(int categoryCount) {
+    private void setEndPage(int categoryAndSearchCount) {
         // 전체 페이지 개수 = 전체게시글수 / 출력할 행의 개수
         // 7 / 5 = 1 ...2
         // 5 / 5 = 1
         // 3 / 5 = 0 ...3 만약 나머지가 있다면 +1 처리
-        endPage = categoryCount / postLimit;
-        if(categoryCount % postLimit != 0){
+        endPage = categoryAndSearchCount / postLimit;
+        if(categoryAndSearchCount % postLimit != 0){
             endPage = endPage + 1;
         }
 

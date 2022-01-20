@@ -13,8 +13,14 @@ $("#title, #writer, #createtime, #viewcount").on("click", function(){
 function loadList(e_id, e_class){
 
     var orderText = "";
+    if(queryString == ""){  //쿼리스트링이 비어있으면 ?로 시작해야함
+        orderText = "?";
+    }else{
+        orderText = "&";
+    }
+
     if(e_id != null){
-        orderText = "&otext=" + e_id + "&otype=" + e_class;
+        orderText = orderText + "otext=" + e_id + "&otype=" + e_class;
     }
 
     $.ajax({

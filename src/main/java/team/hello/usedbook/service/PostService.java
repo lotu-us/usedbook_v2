@@ -115,9 +115,9 @@ public class PostService {
 
     public Map<String, Object> list(String category, Pagination pagination) {
         pagination.setCategory(category);
-        int categoryCount = postRepository.findAllCount(pagination);
+        int categoryAndSearchCount = postRepository.findAllCount(pagination);
 
-        pagination.init(categoryCount);
+        pagination.init(categoryAndSearchCount);
         List<Post> posts = postRepository.findAll(pagination);
 
         Map<String, Object> result = new HashMap<>();
