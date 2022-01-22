@@ -8,6 +8,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import team.hello.usedbook.config.SessionConstants;
+import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
@@ -80,7 +82,7 @@ public class PostApiController {
 
         Post post = postRepository.findById(postId);
         if(post == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 접근입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 게시글이 존재하지 않습니다.");
         }
 
         postRepository.deleteById(postId);

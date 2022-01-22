@@ -59,6 +59,7 @@ function deletePost(){
         url: "/api/post/"+id,
         type: "delete",
         success: function(data){
+            alert("게시글이 삭제되었습니다");
             window.location.replace("/posts");
         },
         error: function(error){
