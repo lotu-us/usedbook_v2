@@ -43,7 +43,6 @@ public class PostDTO {
 
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class Response{
         private Long id;
         private String writer;  //member테이블의 email참조 중. update시 cascade, delete시 cascade
@@ -59,6 +58,8 @@ public class PostDTO {
         private int commentCount = 0;
 
         private List<String> fileNames;
+        private boolean likeStatus = false;             //조회하는 자가 회원일 때, 게시글에 관심버튼 눌렀으면 누른상태로 보여주어야함
+        private boolean menuStatus = false;             //조회하는 자가 회원이고, 게시글 작성자이면 수정 삭제버튼 보여줌
 
         public Response(Post post) {
             this.id = post.getId();
@@ -73,6 +74,22 @@ public class PostDTO {
             this.viewCount = post.getViewCount();
             this.likeCount = post.getLikeCount();
             this.commentCount = post.getCommentCount();
+        }
+
+        public Response(Long id, String writer, String title, String content, int price, int stock, Category category, String createTime, SaleStatus saleStatus, int viewCount, int likeCount, int commentCount, List<String> fileNames) {
+            this.id = id;
+            this.writer = writer;
+            this.title = title;
+            this.content = content;
+            this.price = price;
+            this.stock = stock;
+            this.category = category;
+            this.createTime = createTime;
+            this.saleStatus = saleStatus;
+            this.viewCount = viewCount;
+            this.likeCount = likeCount;
+            this.commentCount = commentCount;
+            this.fileNames = fileNames;
         }
 
         public String getCreateTime() {

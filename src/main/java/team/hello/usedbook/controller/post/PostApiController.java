@@ -63,14 +63,14 @@ public class PostApiController {
     }
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity detailPost(@PathVariable Long postId){
+    public ResponseEntity detailPost(@PathVariable Long postId, HttpSession session){
 
         Post post = postRepository.findById(postId);
         if(post == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 접근입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 게시글이 존재하지 않습니다.");
         }
 
-        PostDTO.Response result = postService.detail(postId);
+        PostDTO.Response result = postService.detail(postId, session);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

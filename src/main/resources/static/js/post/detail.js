@@ -4,7 +4,6 @@ var id = baseUrl.replace("/post/detail/", "");
 //update.js와 유사
 $(document).ready(function(){
     loadPost();
-    document.querySelector("#updateButton").href="/post/update/"+id;      //추가됨
 });
 
 //update.js와 같음
@@ -34,6 +33,16 @@ function replacePost(post){
     document.querySelector("#likeCount").innerHTML = post.likeCount;
     document.querySelector("#viewCount").innerHTML = post.viewCount;
     document.querySelector("#createTime").innerHTML = post.createTime;
+    if(post.likeStatus == true){
+        document.querySelector("#likeButton").classList.add("clicked");
+    }
+    if(post.menuStatus == true){
+        document.querySelector("#postMenu")
+        .innerHTML = `
+            <a href="/post/update/${id}">수정</a>
+            <a href="#" onclick="deletePost()">삭제</a>
+        `;
+    }
 
     files.init(post.fileNames);
 }

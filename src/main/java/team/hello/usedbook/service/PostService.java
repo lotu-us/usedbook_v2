@@ -97,11 +97,27 @@ public class PostService {
 
     }
 
-    public PostDTO.Response detail(Long postId) {
+    public PostDTO.Response detail(Long postId, HttpSession session) {
         //조회수 업데이트
         addViewCount(postId);
 
         PostDTO.Response post = postRepository.findPostAndFileById(postId);
+
+        //조회하는 자가 회원일 때, 게시글에 관심버튼 눌렀으면 누른상태로 보여주어야함
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+        if(loginMember != null){    //회원일 때
+
+            PostLike postLike = postLikeRepository.find(loginMember.getId(), postId);
+            if(postLike != null){   //관심상품으로 등록했을때
+                post.setLikeStatus(true);
+            }
+
+            //조회하는 자가 회원이고, 게시글 작성자이면 수정 삭제버튼 보이게
+            if(loginMember.getNickname().equals(post.getWriter())){
+                post.setMenuStatus(true);
+            }
+        }
+
         return post;
     }
 
