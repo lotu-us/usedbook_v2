@@ -12,9 +12,9 @@ function saveList(){
         type: "get",
         success: function(categoryList){
             for(var key in categoryList){
-                //console.log(key);
-                //console.log(categoryList[key]);
-                replaceSlide(key, categoryList[key].posts, categoryList[key].postFileNames);
+//                console.log(key);
+//                console.log(categoryList[key]);
+                replaceSlide(key, categoryList[key]);
             }
             initCardSlider();
         },
@@ -25,7 +25,7 @@ function saveList(){
     });
 }
 
-function replaceSlide(category, postList, postFileNames){
+function replaceSlide(category, postList){
 
     var result = ``;
     for(var i=0; i<cardCount; i++){
@@ -39,8 +39,9 @@ function replaceSlide(category, postList, postFileNames){
             title = postList[i].title;
             stock = postList[i].stock +"개";
             price = postList[i].price +"원";
-            if(postFileNames[i] != "파일없음"){
-                imgsrc = "/api/image/"+postFileNames[i];
+            var fileName = postList[i].fileNames;
+            if(fileName.length != 0){
+                imgsrc = "/api/image/"+fileName[0];
             }
             postlink = "/post/detail/"+postList[i].id;
         }

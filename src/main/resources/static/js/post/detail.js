@@ -13,8 +13,7 @@ function loadPost(){
         url: "/api/post/"+id,
         type: "get",
         success: function(data){
-            replacePost(data.post);
-            replacePostFiles(data.postFileNames);
+            replacePost(data);
         },
         error: function(error){
             alert(error.responseText);
@@ -35,13 +34,9 @@ function replacePost(post){
     document.querySelector("#likeCount").innerHTML = post.likeCount;
     document.querySelector("#viewCount").innerHTML = post.viewCount;
     document.querySelector("#createTime").innerHTML = post.createTime;
-}
 
-//update.js와 같음
-function replacePostFiles(postFileNames){
-    files.init(postFileNames);
+    files.init(post.fileNames);
 }
-
 
 
 function deletePost(){

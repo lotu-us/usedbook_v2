@@ -53,7 +53,7 @@ public class PostService {
     }
 
 
-    public Long postSave(HttpSession session, PostDTO.EditForm editForm) {
+    public void postSave(HttpSession session, PostDTO.EditForm editForm, List<MultipartFile> fileList) {
         Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
         String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
@@ -68,16 +68,12 @@ public class PostService {
         );
 
         postRepository.save(post);
-        return post.getId();
-    }
-
-    public void postFileSave(Long postId, List<MultipartFile> fileList) {
-        String uploadPath = FileConstants.userUploadImgPath;
-        fileSave(postId, fileList, uploadPath);
+        fileSave(post.getId(), fileList, FileConstants.userUploadImgPath);
     }
 
 
-    public void postUpdate(Long postId, PostDTO.EditForm editForm) {
+
+    public void postUpdate(Long postId, PostDTO.EditForm editForm, List<MultipartFile> fileList, List<String> removeFileList) {
         Post post = new Post(
                 editForm.getTitle(),
                 editForm.getContent(),
@@ -87,39 +83,24 @@ public class PostService {
                 Category.valueOf(editForm.getCategory())
         );
         postRepository.update(postId, post);
-    }
-
-    public void postFileUpdate(Long postId, List<MultipartFile> fileList, List<String> removeFileList) {
-        String uploadPath = FileConstants.userUploadImgPath;
 
         if(removeFileList != null){
-            fileRemove(postId, removeFileList, uploadPath);
+            fileRemove(postId, removeFileList, FileConstants.userUploadImgPath);
+        }
+        if(fileList != null){   //파일을 추가로 업로드한 것이 있을 때
+            fileSave(postId, fileList, FileConstants.userUploadImgPath);
         }
 
-        if(fileList != null){   //파일을 추가로 업로드한 것이 있을 때
-            fileSave(postId, fileList, uploadPath);
-        }
     }
 
-    public Map<String, Object> detail(Long postId) {
+    public PostDTO.Response detail(Long postId) {
         //조회수 업데이트
         addViewCount(postId);
 
-        Post post = postRepository.findById(postId);
-        PostDTO.Response postRes = new PostDTO.Response(post);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("post", postRes);
-
-        List<PostFile> postFiles = postFileRepository.findById(postId);
-        List<String> postFileNames = new ArrayList<>();
-        for (PostFile postFile : postFiles) {
-            postFileNames.add(postFile.getFileName());
-        }
-        result.put("postFileNames", postFileNames);
-
-        return result;
+        PostDTO.Response post = postRepository.findPostAndFileById(postId);
+        return post;
     }
+
 
     public Map<String, Object> list(String category, Pagination pagination) {
         pagination.setCategory(category);
@@ -143,29 +124,41 @@ public class PostService {
         for (Category value : values) {
 
             String lowerCategory = value.toString().toLowerCase();
-            List<Post> posts = postRepository.findAllForIndex(lowerCategory, count);
+            List<PostDTO.Response> allForIndex = postRepository.findAllForIndex(lowerCategory, count);
 
-            List<String> postFileNames = new ArrayList<>();
-            for (Post post : posts) {
-                List<PostFile> postFiles = postFileRepository.findById(post.getId());
-                if(postFiles.size() == 0){  //테스트로 파일 저장안한것들 오류발생안하게..
-                    postFileNames.add("파일없음");
-                }else{
-                    postFileNames.add(postFiles.get(0).getFileName());
+            for (PostDTO.Response forIndex : allForIndex) {
+                List<String> fileNames = forIndex.getFileNames();
+                if(fileNames.size() != 0){  //테스트로 파일 저장안한것들 오류발생안하게..
+                    String first = fileNames.get(0);
+                    fileNames.clear();
+                    fileNames.add(first);
                 }
             }
-
-            Map<String, Object> map = new HashMap<>();
-
-            List<PostDTO.Response> responses = ListPostToListDto(posts);
-            map.put("posts", responses);
-            map.put("postFileNames", postFileNames);
-
-            result.put(lowerCategory, map);
+            result.put(lowerCategory, allForIndex);
         }
 
         return result;
     }
+
+
+    public Map<String, Object> dashboardGetMyPosts(HttpSession session, Pagination pagination) {
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+
+        pagination.setCategory(null);
+        int count = postRepository.findAllForDashboardCount(loginMember);
+
+        pagination.init(count);
+        List<Post> posts = postRepository.findAllForDashboard(loginMember, pagination);
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<PostDTO.Response> responses = ListPostToListDto(posts);
+        result.put("posts", responses);
+        result.put("pagination", pagination);
+
+        return result;
+    }
+
 
     public void addCommentCount(Long postId) {
         postRepository.addCommentCount(postId);
@@ -174,8 +167,6 @@ public class PostService {
     private void addViewCount(Long postId) {
         postRepository.addViewCount(postId);
     }
-
-
 
     private void fileSave(Long postId, List<MultipartFile> fileList, String uploadPath){
         for (MultipartFile multipartFile : fileList) {
@@ -217,21 +208,6 @@ public class PostService {
     }
 
 
-    public Map<String, Object> dashboardGetMyPosts(HttpSession session, Pagination pagination) {
-        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
 
-        pagination.setCategory(null);
-        int count = postRepository.findAllForDashboardCount(loginMember);
 
-        pagination.init(count);
-        List<Post> posts = postRepository.findAllForDashboard(loginMember, pagination);
-
-        Map<String, Object> result = new HashMap<>();
-
-        List<PostDTO.Response> responses = ListPostToListDto(posts);
-        result.put("posts", responses);
-        result.put("pagination", pagination);
-
-        return result;
-    }
 }

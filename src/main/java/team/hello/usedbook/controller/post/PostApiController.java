@@ -39,9 +39,7 @@ public class PostApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
         }
 
-        Long postId = postService.postSave(session, editForm);
-        postService.postFileSave(postId, fileList);
-
+        postService.postSave(session, editForm, fileList);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
@@ -62,9 +60,7 @@ public class PostApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
         }
 
-        postService.postUpdate(postId, editForm);
-        postService.postFileUpdate(postId, fileList, removeFileList);
-
+        postService.postUpdate(postId, editForm, fileList, removeFileList);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
@@ -76,13 +72,18 @@ public class PostApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 접근입니다.");
         }
 
-        Map<String, Object> result = postService.detail(postId);
+        PostDTO.Response result = postService.detail(postId);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 
     @DeleteMapping("/post/{postId}")
     public ResponseEntity deletePost(@PathVariable Long postId){
+
+        Post post = postRepository.findById(postId);
+        if(post == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 접근입니다.");
+        }
 
         postRepository.deleteById(postId);
         //postFileRepository는 db cascade 설정되어있음

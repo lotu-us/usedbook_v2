@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.Pagination;
+import team.hello.usedbook.domain.dto.PostDTO;
 
 import java.util.List;
 
@@ -18,34 +19,54 @@ public interface PostRepository {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(Post post);
 
-    //PostMapper.xml 파일 참고
-    List<Post> findAll(Pagination pagination);
-
-    //PostMapper.xml 파일 참고
-    int findAllCount(Pagination pagination);
+    //detail
+    //mapper
+    PostDTO.Response findPostAndFileById(Long postId);
 
     @Update("update post set title=#{post.title}, content=#{post.content}, price=#{post.price}, stock=#{post.stock}, category=#{post.category}, salestatus=#{post.saleStatus} " +
             "where id=#{postId}")
     int update(@Param("postId") Long postId, @Param("post") Post post);
 
-    @Select("select * from post where id=#{postId}")
-    Post findById(Long postId);
-
     @Delete("delete from post where id=#{postId}")
     int deleteById(Long postId);
 
-    @Select("select * from post where category=#{lowerCategory} order by createtime desc limit #{count} offset 0")
-    List<Post> findAllForIndex(String lowerCategory, int count);
 
-    //postmapper참고
-    List<Post> findAllForDashboard(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
 
-    @Select("select count(*) from post where writer=#{nickname}")
-    int findAllForDashboardCount(Member loginMember);
+
+    @Select("select * from post where id=#{postId}")
+    Post findById(Long postId);
+
+    //PostMapper.xml 파일 참고
+    List<Post> findAll(Pagination pagination);
+    //PostMapper.xml 파일 참고
+    int findAllCount(Pagination pagination);
+
+
+
 
     @Update("update post set commentcount=(commentcount+1) where id=#{postId}")
     void addCommentCount(Long postId);
 
     @Update("update post set viewcount=(viewcount+1) where id=#{postId}")
     void addViewCount(Long postId);
+
+
+
+
+    @Select("select * from post where category=#{lowerCategory} order by createtime desc limit #{count} offset 0")
+    @ResultMap("postAndFile")
+    List<PostDTO.Response> findAllForIndex(String lowerCategory, int count);
+
+
+
+
+
+
+    @Select("select count(*) from post where writer=#{nickname}")
+    int findAllForDashboardCount(Member loginMember);
+
+    //postmapper참고
+    List<Post> findAllForDashboard(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
+
+
 }

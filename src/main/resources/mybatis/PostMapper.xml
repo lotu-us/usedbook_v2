@@ -43,4 +43,57 @@
         </trim>
         limit #{pagination.postLimit} offset #{pagination.postOffset}
     </select>
+
+
+
+
+
+<!--    <resultMap id="postMap" type="Post">-->
+<!--        <id property="id" column="id"></id>-->
+<!--        <result property="writer" column="writer"></result>-->
+<!--        <result property="title" column="title"></result>-->
+<!--        <result property="content" column="content"></result>-->
+<!--        <result property="price" column="price"></result>-->
+<!--        <result property="stock" column="stock"></result>-->
+<!--        <result property="category" column="category"></result>-->
+<!--        <result property="createTime" column="createtime"></result>-->
+<!--        <result property="saleStatus" column="salestatus"></result>-->
+<!--        <result property="viewCount" column="viewcount"></result>-->
+<!--        <result property="likeCount" column="likecount"></result>-->
+<!--        <result property="commentCount" column="commentcount"></result>-->
+<!--    </resultMap>-->
+<!--    <select id="postMap" resultMap="postMap" parameterType="Long">-->
+<!--        select * from post where id=#{postId}-->
+<!--    </select>-->
+
+    <resultMap id="fileMap" type="String">
+        <result column="filename"></result>
+    </resultMap>
+    <select id="fileMap" resultMap="fileMap" parameterType="Long">
+        select filename from postfile where postid=#{postId}
+    </select>
+
+
+    <resultMap id="postAndFile" type="team.hello.usedbook.domain.dto.PostDTO$Response">
+        <id property="id" column="id"></id>
+        <result property="writer" column="writer"></result>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="price" column="price"></result>
+        <result property="stock" column="stock"></result>
+        <result property="category" column="category"></result>
+        <result property="createTime" column="createtime"></result>
+        <result property="saleStatus" column="salestatus"></result>
+        <result property="viewCount" column="viewcount"></result>
+        <result property="likeCount" column="likecount"></result>
+        <result property="commentCount" column="commentcount"></result>
+<!--        <association property="post" column="id" select="postMap"></association>-->
+        <collection property="fileNames" column="id" select="fileMap"></collection>
+    </resultMap>
+    <select id="findPostAndFileById" resultMap="postAndFile" parameterType="Long">
+<!--        SELECT id from post WHERE id=#{postId}-->
+        SELECT * from post WHERE id=#{postId}
+    </select>
+
+
 </mapper>

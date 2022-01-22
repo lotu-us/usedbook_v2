@@ -2,6 +2,7 @@ package team.hello.usedbook.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.enums.Category;
 import team.hello.usedbook.domain.enums.SaleStatus;
@@ -41,9 +42,10 @@ public class PostDTO {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response{
         private Long id;
-
         private String writer;  //member테이블의 email참조 중. update시 cascade, delete시 cascade
         private String title;
         private String content;
@@ -51,11 +53,12 @@ public class PostDTO {
         private int stock;
         private Category category;
         private String createTime;
-
         private SaleStatus saleStatus = SaleStatus.READY;
         private int viewCount = 0;
         private int likeCount = 0;
         private int commentCount = 0;
+
+        private List<String> fileNames;
 
         public Response(Post post) {
             this.id = post.getId();

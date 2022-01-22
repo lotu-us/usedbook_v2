@@ -12,8 +12,7 @@ function loadPost(){
         url: "/api/post/"+id,
         type: "get",
         success: function(data){
-            replacePost(data.post);
-            replacePostFiles(data.postFileNames);
+            replacePost(data);
         },
         error: function(error){
             alert(error.responseText);
@@ -38,14 +37,9 @@ function replacePost(post){
         }
     });
     document.querySelector("#content").value = post.content;
+
+    files.init(post.fileNames);
 }
-
-//detail.js와 같음
-function replacePostFiles(postFileNames){
-    files.init(postFileNames);
-}
-
-
 
 
 
