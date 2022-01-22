@@ -28,7 +28,14 @@ public class CommentApiController {
 
     @GetMapping("/comment/{postId}")
     public ResponseEntity commentGet(@PathVariable Long postId){
-        List<Comment> commentList = commentRepository.findAll(postId);
+        List<CommentDTO.Response> commentList = commentRepository.findAll(postId);
+
+        for (CommentDTO.Response comment : commentList) {
+            if(comment.getViewStatus() == 0){
+                comment.deletedCommentHidePrivacy();
+            }
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(commentList);
     }
 
@@ -41,11 +48,12 @@ public class CommentApiController {
 
         Long commentId = commentService.commentSave(postId, commentForm, session);
         Comment comment = commentRepository.findById(commentId);
+        CommentDTO.Response commentResponse = new CommentDTO.Response(comment);
 
         //추가된 상태
         postService.addCommentCount(postId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(comment);
+        return ResponseEntity.status(HttpStatus.OK).body(commentResponse);
     }
 
     @PutMapping("/comment/{postId}/{commentId}")

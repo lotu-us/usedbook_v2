@@ -18,12 +18,6 @@ public interface CommentRepository {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(Comment comment);
 
-    @Select("select * from comment where id=#{commentId}")
-    Comment findById(Long commentId);
-
-    @Select("select * from comment where postid=#{postId}")
-    List<Comment> findAll(Long postId);
-
     @Update("update comment set content=#{content} where id=#{commentId} and postid=#{postId}")
     int update(@Param("postId") Long postId, @Param("commentId") Long commentId, @Param("content") String content);
 
@@ -33,8 +27,22 @@ public interface CommentRepository {
     @Update("update comment set viewstatus='0' where id=#{commentId} and postid=#{postId}")
     int viewStatusChange(Long postId, Long commentId);
 
+
+
+
+    @Select("select * from comment where id=#{commentId}")
+    Comment findById(Long commentId);
+
+    @Select("select * from comment where postid=#{postId}")
+    List<CommentDTO.Response> findAll(Long postId);
+
     @Select("select count(*) from comment where postid=#{postId}")
     int findByPostId(Long postId);
+
+
+
+
+
 
     @Select("select count(*) from comment where writer=#{nickname}")
     int findAllForDashboardCount(Member loginMember);

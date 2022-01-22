@@ -3,6 +3,7 @@ package team.hello.usedbook.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import team.hello.usedbook.domain.Comment;
 import team.hello.usedbook.domain.enums.SaleStatus;
 
 import javax.validation.constraints.Max;
@@ -33,6 +34,48 @@ public class CommentDTO {
 
         private String createtTime;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Response{
+        private Long id;
+        private Long postId;
+        private String writer;
+        private String content;
+        private Long parentId;  //부모댓글의 id값
+        private int depth;      //댓글의 깊이. 0이면 댓글, 1이면 답글, 2이면 대댓글
+        private String createTime;
+        private int viewStatus; //1이면 게시된 것, 0이면 삭제처리된 것
+
+        public Response(Comment comment) {
+            this.id = comment.getId();
+            this.postId = comment.getId();
+            this.writer = comment.getWriter();
+            this.content = comment.getContent();
+            this.parentId = comment.getParentId();
+            this.depth = comment.getDepth();
+            this.createTime = comment.getCreateTime();
+            this.viewStatus = comment.getViewStatus();
+        }
+
+        public void deletedCommentHidePrivacy(){
+            this.writer="";
+            this.content="";
+            this.createTime="";
+        }
+
+        //타임리프 편의메서드
+        public String getCreatetime() {
+            //2022-01-15 00:00:54.0 -> 22-01-15 00:00
+            if (createTime.length() == 21) {
+                return createTime.substring(2, createTime.length() - 5);
+                //DB에 저장될때도 substring되어서 저장되어버림.. 뷰에서 가져올때만 처리되도록
+            }
+            return createTime;
+        }
+    }
+
 
     @Data
     @NoArgsConstructor
