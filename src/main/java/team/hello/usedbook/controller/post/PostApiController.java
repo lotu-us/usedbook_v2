@@ -114,14 +114,19 @@ public class PostApiController {
 
 
     @GetMapping("/post/like/{status}/{postId}")
-    public ResponseEntity postLike(@PathVariable Long postId, @PathVariable String status){
+    public ResponseEntity postLike(@PathVariable Long postId, @PathVariable String status, HttpSession session){
 
         Post post = postRepository.findById(postId);
         if(post == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 접근입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 게시글이 존재하지 않습니다.");
         }
 
-        int updated = postService.addLikeCount(postId, status);
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+        if(loginMember == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원만 관심상품을 등록할 수 있습니다.");
+        }
+
+        int updated = postService.changePostLike(postId, status, loginMember);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 }

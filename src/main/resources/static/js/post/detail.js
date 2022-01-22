@@ -64,15 +64,17 @@ function deletePost(){
 
 
 function like(){
-    document.querySelector("#likeButton").classList.toggle("clicked");
-    var like = document.querySelector("#likeButton").classList.contains("clicked");
+    var button = document.querySelector("#likeButton");
+    var count = document.querySelector("#likeCount");
+
+    var like = !button.classList.contains("clicked");
 
     $.ajax({
         url: "/api/post/like/"+like+"/"+id,
         type: "get",
         success: function(data){
             if(data >= 1){
-                var count = document.querySelector("#likeCount");
+                button.classList.toggle("clicked");
                 if(like == true){
                     count.innerHTML = parseInt(count.innerHTML) + 1;
                 }else{
@@ -81,7 +83,7 @@ function like(){
             }
         },
         error: function(error){
-
+            alert(error.responseText);
         }
     });
 }

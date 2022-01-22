@@ -2,6 +2,7 @@ package team.hello.usedbook.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import team.hello.usedbook.config.FileConstants;
@@ -9,11 +10,13 @@ import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.PostFile;
+import team.hello.usedbook.domain.PostLike;
 import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.domain.enums.Category;
 import team.hello.usedbook.domain.enums.SaleStatus;
 import team.hello.usedbook.repository.PostFileRepository;
+import team.hello.usedbook.repository.PostLikeRepository;
 import team.hello.usedbook.repository.PostRepository;
 import team.hello.usedbook.utils.ValidResultList;
 
@@ -33,6 +36,7 @@ import static team.hello.usedbook.domain.dto.PostDTO.Response.ListPostToListDto;
 public class PostService {
     @Autowired private PostRepository postRepository;
     @Autowired private PostFileRepository postFileRepository;
+    @Autowired private PostLikeRepository postLikeRepository;
 
 
     public List<ValidResultList.ValidResult> postSaveCheck(PostDTO.EditForm editForm, List<MultipartFile> fileList, BindingResult bindingResult) {
@@ -123,15 +127,6 @@ public class PostService {
         postRepository.addCommentCount(postId);
     }
 
-    public int addLikeCount(Long postId, String status) {
-        String num;
-        if(status.equals("true")){ num = "+1"; }
-        else{                      num = "-1"; }
-        int updated = postRepository.changeLikeCount(postId, num);
-        return updated;
-    }
-
-
     private void addViewCount(Long postId) {
         postRepository.addViewCount(postId);
     }
@@ -176,6 +171,19 @@ public class PostService {
     }
 
 
+    @Transactional
+    public int changePostLike(Long postId, String status, Member loginMember) {
+        int updated=0;
+        PostLike postLike = new PostLike(loginMember.getId(), postId);
+        if(status.equals("true")){
+            postLikeRepository.add(postLike);
+            updated = postRepository.changeLikeCount(postId, "+1");
+        }
+        else{
+            postLikeRepository.remove(postLike);
+            updated = postRepository.changeLikeCount(postId, "-1");
+        }
 
-
+        return updated;
+    }
 }
