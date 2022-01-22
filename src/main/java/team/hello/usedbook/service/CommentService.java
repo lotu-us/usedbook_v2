@@ -22,6 +22,33 @@ import java.util.Map;
 public class CommentService {
     @Autowired private CommentRepository commentRepository;
 
+    public Map<String, Object> commentList(Long postId, HttpSession session) {
+        List<CommentDTO.Response> commentList = commentRepository.findAll(postId);
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+
+        for (CommentDTO.Response comment : commentList) {
+            if(comment.getViewStatus() == 0){
+                comment.deletedCommentHidePrivacy();
+            }
+
+            //조회하는 자가 회원이고 댓글 작성자일떄
+            if(loginMember != null && loginMember.getNickname().equals(comment.getWriter())){
+                comment.setCommentMenu(true);   //수정 삭제메뉴 보이게
+            }
+        }
+
+        //조회하는 자가 회원인 경우에만 댓글 답글 가능
+        boolean commentWriteStatus = false;
+        if(loginMember != null){
+            commentWriteStatus = true;
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("commentList", commentList);
+        result.put("commentWriteStatus", commentWriteStatus);
+        return result;
+    }
+
     public List<ValidResultList.ValidResult> commentSaveCheck(CommentDTO.EditForm commentForm, BindingResult bindingResult) {
         List<ValidResultList.ValidResult> validResults = new ValidResultList(bindingResult).getList();
         return validResults;

@@ -3,9 +3,7 @@ package team.hello.usedbook.repository;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Comment;
-import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.CommentDTO;
-import team.hello.usedbook.domain.dto.Pagination;
 
 import java.util.List;
 

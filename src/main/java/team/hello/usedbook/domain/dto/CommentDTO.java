@@ -37,7 +37,6 @@ public class CommentDTO {
 
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class Response{
         private Long id;
         private Long postId;
@@ -47,6 +46,8 @@ public class CommentDTO {
         private int depth;      //댓글의 깊이. 0이면 댓글, 1이면 답글, 2이면 대댓글
         private String createTime;
         private int viewStatus; //1이면 게시된 것, 0이면 삭제처리된 것
+
+        private boolean commentMenu = false;            //조회하는 자가 댓글 작성자이면 댓글 수정 삭제 가능
 
         public Response(Comment comment) {
             this.id = comment.getId();
@@ -66,7 +67,7 @@ public class CommentDTO {
         }
 
         //타임리프 편의메서드
-        public String getCreatetime() {
+        public String getCreateTime() {
             //2022-01-15 00:00:54.0 -> 22-01-15 00:00
             if (createTime.length() == 21) {
                 return createTime.substring(2, createTime.length() - 5);
@@ -74,6 +75,7 @@ public class CommentDTO {
             }
             return createTime;
         }
+
     }
 
 

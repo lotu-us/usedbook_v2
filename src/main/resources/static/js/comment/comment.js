@@ -1,15 +1,24 @@
-var postId = window.location.pathname.replace("/post/detail/", "");
+const postId = window.location.pathname.replace("/post/detail/", "");
 
 $(document).ready(function(){
     loadComment();
 });
 
+var commentWriteStatus = false;
 function loadComment(){
     $.ajax({
         url: "/api/comment/"+postId,
         type: "get",
-        success: function(commentList){
-            commentList.forEach(function(comment){
+        success: function(data){
+            //회원인 경우에만 댓글 답글 작성 가능
+            if(data.commentWriteStatus == true){
+                commentWriteStatus = true;
+                document.querySelector("#commentForm .input-group textarea").innerHTML = "";
+                document.querySelector("#commentForm .input-group textarea").disabled = false;
+                document.querySelector("#commentForm .input-group button").disabled = false;
+            }
+
+            data.commentList.forEach(function(comment){
                 if(comment.depth == 0){
                     $("#commentList").append(addComment(comment));
                 }else{
@@ -245,9 +254,18 @@ function addComment(comment){
     }
 
     var replySpan = `<span onclick="openReplyForm('${identify}', event)">답글</span>`;
-    if(comment.depth == 2){
+    if(commentWriteStatus == false || comment.depth == 2){
         replySpan = "";
     }
+
+    var commentMenu = `
+    <span              onclick="openUpdateForm('${comment.id}', event)">수정</span>
+    <span class="ms-2" onclick="deleteComment('${comment.id}', event)">삭제</span>
+    `;
+    if(comment.commentMenu == false){
+        commentMenu = "";
+    }
+
 
     var result = `
      <div class="commentWrap c${comment.id}">
@@ -261,8 +279,7 @@ function addComment(comment){
              <div class="commentMenu">
                   ${replySpan}
                   <div style="float:right;" >
-                      <span              onclick="openUpdateForm('${comment.id}', event)">수정</span>
-                      <span class="ms-2" onclick="deleteComment('${comment.id}', event)">삭제</span>
+                     ${commentMenu}
                   </div>
              </div>
              ${replyIcon}

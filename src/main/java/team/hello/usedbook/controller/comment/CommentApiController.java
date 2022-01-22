@@ -27,16 +27,10 @@ public class CommentApiController {
     @Autowired private PostService postService;
 
     @GetMapping("/comment/{postId}")
-    public ResponseEntity commentGet(@PathVariable Long postId){
-        List<CommentDTO.Response> commentList = commentRepository.findAll(postId);
+    public ResponseEntity commentList(@PathVariable Long postId, HttpSession session){
 
-        for (CommentDTO.Response comment : commentList) {
-            if(comment.getViewStatus() == 0){
-                comment.deletedCommentHidePrivacy();
-            }
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(commentList);
+        Map<String, Object> result = commentService.commentList(postId, session);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping("/comment/{postId}")
