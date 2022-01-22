@@ -127,4 +127,17 @@ public class PostApiController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+
+
+    @GetMapping("/post/like/{status}/{postId}")
+    public ResponseEntity postLike(@PathVariable Long postId, @PathVariable String status){
+
+        Post post = postRepository.findById(postId);
+        if(post == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 접근입니다.");
+        }
+
+        int updated = postService.addLikeCount(postId, status);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
+    }
 }

@@ -164,6 +164,15 @@ public class PostService {
         postRepository.addCommentCount(postId);
     }
 
+    public int addLikeCount(Long postId, String status) {
+        String num;
+        if(status.equals("true")){ num = "+1"; }
+        else{                      num = "-1"; }
+        int updated = postRepository.changeLikeCount(postId, num);
+        return updated;
+    }
+
+
     private void addViewCount(Long postId) {
         postRepository.addViewCount(postId);
     }

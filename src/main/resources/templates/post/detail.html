@@ -10,6 +10,8 @@
         #post .slider-container{ width:100%; height:350px; padding:0px;}
         #post #content{ height:200px; }
         #post #createTime{ float:right; }
+        #post #likeButton{ color:red; font-size:1.1em; }
+        #post #likeButton.clicked{ font-weight:bold; }
 
         .commentMenu{ font-size:0.85em; color:#0d6efd; }
         .commentMenu span { cursor:pointer; }
@@ -31,7 +33,6 @@
         .commentRow .fa-reply { position:absolute; right:100%; transform: rotate(180deg); width:fit-content; color:#ababab; }
 
         #updateForm > .row { margin:0px; padding:0px!important; border:0px; }
-
     </style>
 </head>
 <body>
@@ -79,6 +80,7 @@
 
         <div class="row mt-3">
             <div class="col">
+                <i class="far fa-heart" id="likeButton" onclick="like()"></i>
                 관심 <span id="likeCount">10</span>&nbsp;
                 조회 <span id="viewCount">10</span>
 

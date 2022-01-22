@@ -59,3 +59,29 @@ function deletePost(){
     });
 
 }
+
+
+
+
+function like(){
+    document.querySelector("#likeButton").classList.toggle("clicked");
+    var like = document.querySelector("#likeButton").classList.contains("clicked");
+
+    $.ajax({
+        url: "/api/post/like/"+like+"/"+id,
+        type: "get",
+        success: function(data){
+            if(data >= 1){
+                var count = document.querySelector("#likeCount");
+                if(like == true){
+                    count.innerHTML = parseInt(count.innerHTML) + 1;
+                }else{
+                    count.innerHTML = parseInt(count.innerHTML) - 1;
+                }
+            }
+        },
+        error: function(error){
+
+        }
+    });
+}

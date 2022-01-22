@@ -50,6 +50,9 @@ public interface PostRepository {
     @Update("update post set viewcount=(viewcount+1) where id=#{postId}")
     void addViewCount(Long postId);
 
+    @Update("update post set likecount=(likecount ${num}) where id=#{postId}")
+    int changeLikeCount(Long postId, String num);
+
 
 
 
@@ -70,3 +73,4 @@ public interface PostRepository {
 
 
 }
+
