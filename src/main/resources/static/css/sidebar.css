@@ -1,5 +1,6 @@
 .sidebar { max-width:230px; }
 .sidebar .nav li { width:100%; }
+.sidebar .mobile i { font-size:1.3em; }
 
 @media screen and (min-width: 767px) {
     .sidebar { display:block; }

@@ -1,4 +1,4 @@
-package team.hello.usedbook.controller;
+package team.hello.usedbook.controller.dashboard;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,5 +26,10 @@ public class DashboardController {
     @GetMapping("/dashboard/myComments")
     public String myComments(){
         return "dashboard/myComments";
+    }
+
+    @GetMapping("/dashboard/myFavorites")
+    public String myFavorites(){
+        return "dashboard/myFavorites";
     }
 }
