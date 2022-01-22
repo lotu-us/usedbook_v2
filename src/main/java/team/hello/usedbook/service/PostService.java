@@ -117,47 +117,6 @@ public class PostService {
         return result;
     }
 
-    public Map<String, Object> allCategoryListForIndex(int count) {
-        Map<String, Object> result = new HashMap<>();
-
-        Category[] values = Category.values();
-        for (Category value : values) {
-
-            String lowerCategory = value.toString().toLowerCase();
-            List<PostDTO.Response> allForIndex = postRepository.findAllForIndex(lowerCategory, count);
-
-            for (PostDTO.Response forIndex : allForIndex) {
-                List<String> fileNames = forIndex.getFileNames();
-                if(fileNames.size() != 0){  //테스트로 파일 저장안한것들 오류발생안하게..
-                    String first = fileNames.get(0);
-                    fileNames.clear();
-                    fileNames.add(first);
-                }
-            }
-            result.put(lowerCategory, allForIndex);
-        }
-
-        return result;
-    }
-
-
-    public Map<String, Object> dashboardGetMyPosts(HttpSession session, Pagination pagination) {
-        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
-
-        pagination.setCategory(null);
-        int count = postRepository.findAllForDashboardCount(loginMember);
-
-        pagination.init(count);
-        List<Post> posts = postRepository.findAllForDashboard(loginMember, pagination);
-
-        Map<String, Object> result = new HashMap<>();
-
-        List<PostDTO.Response> responses = ListPostToListDto(posts);
-        result.put("posts", responses);
-        result.put("pagination", pagination);
-
-        return result;
-    }
 
 
     public void addCommentCount(Long postId) {

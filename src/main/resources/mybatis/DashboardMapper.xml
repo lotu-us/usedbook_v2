@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="team.hello.usedbook.repository.DashboardRepository">
+
+    <select id="findMyPosts" resultType="Post" parameterType="map">
+        select * from post
+        where writer=#{loginMember.nickname}
+        <trim prefix="ORDER BY" prefixOverrides=",">
+            <if test="pagination.otext != 'createtime'"> ${pagination.otext} ${pagination.otype} </if>
+            , createtime ${pagination.ctype}
+        </trim>
+        limit #{pagination.postLimit} offset #{pagination.postOffset}
+    </select>
+
+
+
+    <resultMap id="DashboardResponse" type="team.hello.usedbook.domain.dto.CommentDTO$DashboardResponse">
+        <result column="id" property="postId"></result>
+        <result column="salestatus" property="postSaleStatus"></result>
+        <result column="title" property="postTitle"></result>
+        <result column="content" property="commentContent"></result>
+        <result column="createtime" property="commentCreatetime"></result>
+    </resultMap>
+
+    <select id="findMyComments" resultMap="DashboardResponse" parameterType="map">
+        SELECT post.id, post.salestatus, post.title, comment.content, comment.createtime
+        FROM post JOIN comment ON post.id=comment.postid
+        WHERE comment.writer=#{loginMember.nickname}
+        <trim prefix="ORDER BY" prefixOverrides=",">
+            <if test="pagination.otext != 'createtime'"> ${pagination.otext} ${pagination.otype} </if>
+            , createtime ${pagination.ctype}
+        </trim>
+        limit #{pagination.postLimit} offset #{pagination.postOffset}
+    </select>
+
+
+
+    <select id="findMyFavorites" resultType="Post" parameterType="map">
+        select post.*
+        from post join postlike on post.id=postlike.postid
+        where postlike.memberid=#{loginMember.id}
+        <trim prefix="ORDER BY" prefixOverrides=",">
+            <if test="pagination.otext != 'createtime'"> ${pagination.otext} ${pagination.otype} </if>
+            , createtime ${pagination.ctype}
+        </trim>
+        limit #{pagination.postLimit} offset #{pagination.postOffset}
+    </select>
+
+</mapper>

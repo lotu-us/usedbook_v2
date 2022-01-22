@@ -2,7 +2,6 @@ package team.hello.usedbook.repository;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
@@ -52,25 +51,6 @@ public interface PostRepository {
 
     @Update("update post set likecount=(likecount ${num}) where id=#{postId}")
     int changeLikeCount(Long postId, String num);
-
-
-
-
-    @Select("select * from post where category=#{lowerCategory} order by createtime desc limit #{count} offset 0")
-    @ResultMap("postAndFile")
-    List<PostDTO.Response> findAllForIndex(String lowerCategory, int count);
-
-
-
-
-
-
-    @Select("select count(*) from post where writer=#{nickname}")
-    int findAllForDashboardCount(Member loginMember);
-
-    //postmapper참고
-    List<Post> findAllForDashboard(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
-
 
 }
 

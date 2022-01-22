@@ -40,13 +40,4 @@ public interface CommentRepository {
     int findByPostId(Long postId);
 
 
-
-
-
-
-    @Select("select count(*) from comment where writer=#{nickname}")
-    int findAllForDashboardCount(Member loginMember);
-
-    //mapper 참고
-    List<CommentDTO.DashboardResponse> findAllForDashboard(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
 }

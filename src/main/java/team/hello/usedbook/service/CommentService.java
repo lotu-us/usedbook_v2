@@ -46,19 +46,5 @@ public class CommentService {
     }
 
 
-    public Map<String, Object> dashboardGetMyComments(HttpSession session, Pagination pagination) {
-        Member member = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
 
-        pagination.setCategory(null);
-        int allForDashboardCount = commentRepository.findAllForDashboardCount(member);
-
-        pagination.init(allForDashboardCount);
-        List<CommentDTO.DashboardResponse> comments = commentRepository.findAllForDashboard(member, pagination);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("comments", comments);
-        result.put("pagination", pagination);
-
-        return result;
-    }
 }

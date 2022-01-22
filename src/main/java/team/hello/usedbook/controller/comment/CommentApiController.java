@@ -82,10 +82,5 @@ public class CommentApiController {
         return ResponseEntity.status(HttpStatus.OK).body(delete);
     }
 
-    @GetMapping("/dashboard/myComments")
-    public ResponseEntity dashboardGetMyComments(HttpSession session, @ModelAttribute Pagination pagination){
 
-        Map<String, Object> result = commentService.dashboardGetMyComments(session, pagination);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
 }

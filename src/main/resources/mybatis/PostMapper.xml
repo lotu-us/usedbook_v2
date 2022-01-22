@@ -34,15 +34,7 @@
         </where>
     </select>
 
-    <select id="findAllForDashboard" resultType="Post" parameterType="map">
-        select * from post
-        where writer=#{loginMember.nickname}
-        <trim prefix="ORDER BY" prefixOverrides=",">
-            <if test="pagination.otext != 'createtime'"> ${pagination.otext} ${pagination.otype} </if>
-            , createtime ${pagination.ctype}
-        </trim>
-        limit #{pagination.postLimit} offset #{pagination.postOffset}
-    </select>
+
 
 
 

@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
-import team.hello.usedbook.repository.PostFileRepository;
 import team.hello.usedbook.repository.PostRepository;
 import team.hello.usedbook.service.PostService;
 import team.hello.usedbook.utils.ValidResultList;
@@ -26,7 +25,6 @@ public class PostApiController {
 
     @Autowired private PostService postService;
     @Autowired private PostRepository postRepository;
-    @Autowired private PostFileRepository postFileRepository;
 
     @PostMapping("/post")
     public ResponseEntity writePost(@Validated @RequestPart(value = "jsonData") PostDTO.EditForm editForm, BindingResult bindingResult,
@@ -111,21 +109,7 @@ public class PostApiController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/posts/allCategoryListForIndex")
-    public ResponseEntity allCategoryListForIndex(@RequestParam int count){
 
-        Map<String, Object> result = postService.allCategoryListForIndex(count);
-
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
-
-    @GetMapping("/dashboard/myPosts")
-    public ResponseEntity dashboardGetMyPosts(HttpSession session, @ModelAttribute Pagination pagination){
-
-        Map<String, Object> result = postService.dashboardGetMyPosts(session, pagination);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
 
 
 
