@@ -7,7 +7,6 @@ import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Comment;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.CommentDTO;
-import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.repository.CommentRepository;
 import team.hello.usedbook.utils.ValidResultList;
 
@@ -54,8 +53,7 @@ public class CommentService {
         return validResults;
     }
 
-    public Long commentSave(Long postId, CommentDTO.EditForm commentForm, HttpSession session) {
-        Member member = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+    public Long commentSave(Long postId, CommentDTO.EditForm commentForm, Member loginMember) {
         String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
         Comment comment = new Comment(

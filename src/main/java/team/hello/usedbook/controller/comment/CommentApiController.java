@@ -7,9 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Comment;
+import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.CommentDTO;
-import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.repository.CommentRepository;
 import team.hello.usedbook.service.CommentService;
 import team.hello.usedbook.service.PostService;
@@ -40,7 +41,12 @@ public class CommentApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validResults);
         }
 
-        Long commentId = commentService.commentSave(postId, commentForm, session);
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+        if(loginMember == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원만 댓글을 등록할 수 있습니다.");
+        }
+
+        Long commentId = commentService.commentSave(postId, commentForm, loginMember);
         Comment comment = commentRepository.findById(commentId);
         CommentDTO.Response commentResponse = new CommentDTO.Response(comment);
 
