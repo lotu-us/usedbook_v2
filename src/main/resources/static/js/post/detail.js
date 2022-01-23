@@ -13,6 +13,7 @@ function loadPost(){
         type: "get",
         success: function(data){
             replacePost(data);
+            replaceBasket(data);
         },
         error: function(error){
             alert(error.responseText);
@@ -42,6 +43,9 @@ function replacePost(post){
             <a href="/post/update/${id}">수정</a>
             <a href="#" onclick="deletePost()">삭제</a>
         `;
+    }
+    if(post.saleStatus == "판매완료"){
+        document.querySelector("#postMenu").innerHTML = "";
     }
 
     files.init(post.fileNames);
@@ -97,3 +101,4 @@ function like(){
         }
     });
 }
+

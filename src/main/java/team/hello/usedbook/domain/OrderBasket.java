@@ -11,5 +11,11 @@ public class OrderBasket {
     private Long id;
     private Long memberId;
     private Long postId;
-    private int orderCount;
+    private int count;  //주문수량
+
+    public OrderBasket(Long memberId, Long postId, int count) {
+        this.memberId = memberId;
+        this.postId = postId;
+        this.count = count;
+    }
 }

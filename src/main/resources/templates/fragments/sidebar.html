@@ -35,15 +35,14 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link"
-                   th:href="@{/dashboard/myBasket}" th:classappend="${menu} == 'myBasket' ? 'active'">
+                <a href="#" class="nav-link" th:href="@{/order/basket}" th:classappend="${menu} == 'myBasket' ? 'active'">
                     <i class="fas fa-shopping-basket"></i> 장바구니
                 </a>
             </li>
             <li>
                 <a href="#" class="nav-link"
                    th:href="@{/dashboard/myOrders}" th:classappend="${menu} == 'myOrders' ? 'active'">
-                    <i class="fas fa-wallet"></i> 주문목록
+                    <i class="fas fa-wallet"></i> 구매목록
                 </a>
             </li>
             <li>
