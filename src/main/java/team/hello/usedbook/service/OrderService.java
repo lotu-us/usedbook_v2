@@ -1,39 +1,81 @@
 package team.hello.usedbook.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
-import team.hello.usedbook.domain.OrderBasket;
-import team.hello.usedbook.domain.Post;
-import team.hello.usedbook.repository.OrderBasketRepository;
-import team.hello.usedbook.repository.PostRepository;
+import team.hello.usedbook.domain.Orders;
+import team.hello.usedbook.domain.dto.OrderBasketDTO;
+import team.hello.usedbook.domain.enums.OrderStatus;
+import team.hello.usedbook.domain.enums.Payment;
+import team.hello.usedbook.repository.OrderRepository;
+
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
-    @Autowired private OrderBasketRepository orderBasketRepository;
-    @Autowired private PostRepository postRepository;
+    @Autowired private OrderRepository orderRepository;
 
-    public String addCheck(Member loginMember, Long postId, int count) {
+    public void addOrders(String arr, HttpSession session) {
 
-        if(loginMember == null){
-            return "장바구니는 회원만 이용할 수 있습니다.";
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+        List<OrderBasketDTO.basketToOrder> basketList = jsonArrToList(arr);
+
+        //날짜
+        String orderTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        //주문번호 만들기
+        String uuid = UUID.randomUUID().toString().substring(0, 6);
+        String time = orderTime.substring(2, 16)
+                .replace("-", "")
+                .replace(":", "")
+                .replace(" ", "");
+        String orderId = time + "_" + uuid;
+
+
+        for (OrderBasketDTO.basketToOrder basket : basketList) {
+            Orders orders = new Orders(
+                    orderId,
+                    loginMember.getId(),
+                    basket.getPostid(),
+                    basket.getCount(),
+                    OrderStatus.READY,
+                    Payment.READY,
+                    orderTime
+            );
+            orderRepository.addOrder(orders);
         }
-
-        Post post = postRepository.findById(postId);
-        if(post == null){
-            return "해당 게시글이 존재하지 않습니다.";
-        }
-
-        if(post.getStock() < count){
-            return "상품의 수량을 초과하여 장바구니에 담을 수 없습니다.";
-        }
-
-        OrderBasket orderBasket = orderBasketRepository.findOrderBasket(loginMember.getId(), postId);
-        if(orderBasket != null){
-            return "이미 장바구니에 담긴 상품입니다. 장바구니 페이지에서 수량을 변경해주세요.";
-        }
-
-        return null;
     }
 
+
+
+
+
+
+    private List<OrderBasketDTO.basketToOrder> jsonArrToList(String arr) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<OrderBasketDTO.basketToOrder> basketList = new ArrayList();
+
+        try{
+            List<Object> list = mapper.readValue(arr, new TypeReference<List>() {});
+
+            for (int i = 0; i < list.size(); i++) {
+                String json = mapper.writeValueAsString(list.get(i));
+                OrderBasketDTO.basketToOrder basketToOrder = mapper.readValue(json, OrderBasketDTO.basketToOrder.class);
+                basketList.add(basketToOrder);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return basketList;
+    }
 }
