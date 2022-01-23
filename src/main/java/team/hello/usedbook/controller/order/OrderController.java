@@ -11,5 +11,8 @@ public class OrderController {
         return "order/orderbasket";
     }
 
-
+    @GetMapping("/order")
+    public String order(){
+        return "order/order";
+    }
 }
