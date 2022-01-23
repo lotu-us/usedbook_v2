@@ -5,7 +5,7 @@ $(document).ready(function(){
     loadList(null, null);
 });
 
-$("#title, #writer, #createtime, #viewcount").on("click", function(){
+$("#title, #writer, #salestatus, #createtime, #viewcount").on("click", function(){
     changeClass(this.id, this.className);
     loadList(this.id, this.className);
 });
@@ -54,6 +54,7 @@ function addTR(posts){
                 <td style="text-overflow: ellipsis;">
                     <a href="/post/detail/${post.id}">${post.title}</a><span> (<span>${post.commentCount}</span>)</span>
                 </td>
+                <td>${post.saleStatus}</td>
                 <td>${post.writer}</td>
                 <td>${post.createTime}</td>
                 <td>${post.viewCount}</td>
