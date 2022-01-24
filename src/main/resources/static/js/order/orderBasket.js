@@ -95,20 +95,33 @@ function addTR(orderBasketList){
     var sum = 0;
 
     orderBasketList.forEach(function(basket){
+
+        var checkbox = `<input class="form-check-input" type="checkbox" value="${basket.id}" checked>`;
+        var soldout = "";
+        var buttonDisabled = "";
+        if(basket.saleStatus != "READY"){
+               checkbox = `<input class="form-check-input" type="checkbox" value="${basket.id}" disabled>`;
+               soldout = `<span style="color:red; font-size:1.1em;">[판매 완료된 상품입니다. 삭제해주세요.]</span>`;
+               buttonDisabled = "disabled";
+        }else{
+            sum = sum + (basket.count * basket.price);
+        }
+
         result = result + `
             <tr>
-                <th scope="row"><input class="form-check-input" type="checkbox" value="${basket.id}" checked></th>
+                <th scope="row">${checkbox}</th>
 
                 <td>
                     <div style="float:left;">
+                        <div>${soldout}</div>
                         <div><a href="/post/detail/${basket.id}">${basket.title}</a></div>
                         <div>판매자 : ${basket.writer}</div>
                         <div>판매가격 : <span class="postPrice won">${basket.price}</span></div>
                         <div><span style="float:left">구매수량 : </span>
                             <div class="orderCount input-group">
-                                <button class="btn btn-sm btn-outline-secondary" onclick="changeCount('minus', ${basket.id}, event)">-</button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="changeCount('minus', ${basket.id}, event)" ${buttonDisabled}>-</button>
                                 <div class="form-control">${basket.count}</div>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="changeCount('plus', ${basket.id}, event)">+</button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="changeCount('plus', ${basket.id}, event)" ${buttonDisabled}>+</button>
                             </div>
                         </div>
                     </div>
@@ -122,8 +135,6 @@ function addTR(orderBasketList){
                 <input type="hidden" class="postStock" value="${basket.stock}">
             </tr>
             `;
-
-        sum = sum + (basket.count * basket.price);
     });
     changeTotalPrice(sum);
 
@@ -193,7 +204,7 @@ function changeTotalPrice(initvalue){
 
 
 $(document).on("click", "input[type='checkbox']", function(){
-    var boxes = document.querySelectorAll("input[type='checkbox']");
+    var boxes = document.querySelectorAll("input[type='checkbox']:not(:disabled)");
     var boxesChecked = document.querySelectorAll("input[type='checkbox']:checked");
 
     if(boxesChecked.length -1 == 0){
@@ -208,7 +219,7 @@ $(document).on("click", "input[type='checkbox']", function(){
 
 
 function checkboxAll(selectAll){
-    var boxes = document.querySelectorAll("input[type='checkbox']");
+    var boxes = document.querySelectorAll("input[type='checkbox']:not(:disabled)");
 
     boxes.forEach(function(box){
         box.checked = selectAll.checked;
