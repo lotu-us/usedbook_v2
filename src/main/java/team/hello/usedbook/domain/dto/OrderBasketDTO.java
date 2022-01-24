@@ -19,10 +19,4 @@ public class OrderBasketDTO {
         private int count;
     }
 
-    @Data
-    @NoArgsConstructor
-    public static class basketToOrder{
-        private Long postid;
-        private int count;
-    }
 }

@@ -20,8 +20,15 @@ public interface OrderBasketRepository {
 
     @Select("SELECT post.id, post.writer, post.title, post.price, post.stock, post.salestatus, orderbasket.count " +
             "FROM orderbasket JOIN post ON orderbasket.postid = post.id " +
+            "WHERE post.id=#{postId}")
+    OrderBasketDTO.Response findByPostId(Long postId);
+
+    @Select("SELECT post.id, post.writer, post.title, post.price, post.stock, post.salestatus, orderbasket.count " +
+            "FROM orderbasket JOIN post ON orderbasket.postid = post.id " +
             "WHERE memberid=#{memberId}")
     List<OrderBasketDTO.Response> findAll(Long memberId);
+
+
 
     @Update("update orderbasket set count=#{count} where memberid=#{memberId} and postid=#{postId}")
     int updateBasket(Long memberId, Long postId, int count);

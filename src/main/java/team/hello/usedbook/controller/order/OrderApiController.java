@@ -19,6 +19,34 @@ public class OrderApiController {
     @Autowired private OrderRepository orderRepository;
 
 
+    @PostMapping("/basketToOrder")
+    public ResponseEntity saveBasketToOrder(@RequestBody String arr, HttpSession session){
+
+        List<Long> postIdList = orderService.jsonArrToPostIdList(arr);
+
+        //결제내용 우선 세션에 저장 (구매 할지 안할지 모르니까)
+        session.setAttribute(SessionConstants.BAKET_TO_ORDER, postIdList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+
+    @GetMapping("/basketToOrder")
+    public ResponseEntity getBasketToOrder(HttpSession session){
+
+        List<Long> postIdList = (List) session.getAttribute(SessionConstants.BAKET_TO_ORDER);
+        if(postIdList == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("장바구니에서 구매할 물건을 선택해주세요.");
+        }
+
+        List<OrderBasketDTO.Response> basketToOrder = orderService.getBasketToOrder(postIdList);
+        return ResponseEntity.status(HttpStatus.OK).body(basketToOrder);
+    }
+
+
+
+
+
     @PostMapping("/order")
     public ResponseEntity order(@RequestBody String arr, HttpSession session){
 

@@ -52,31 +52,25 @@ function deleteBasket(postId, event){
 }
 
 
-function order(){
+function basketToOrder(){
     var boxesChecked = document.querySelectorAll("input[type='checkbox']:checked");
     if(boxesChecked.length -1 == 0){
         alert("상품을 선택해주세요");
         return;
     }
 
-    var objarr = new Array();
+    var arr = new Array();
     for(var i=1; i<boxesChecked.length; i++){
-        var obj = {
-            postid:0,
-            count:0
-        }
-        obj.postid = boxesChecked[i].value;
-        obj.count = $(boxesChecked[i]).parents("tr").find(".orderCount div").text();
-        objarr.push(obj);
+        arr.push(boxesChecked[i].value);
     }
 
     $.ajax({
-        url: "/api/order",
+        url: "/api/basketToOrder",
         type: "post",
         contentType: 'application/json',
-        data: JSON.stringify(objarr),
+        data: JSON.stringify(arr),
         success: function(data){
-
+            window.location.replace("/order");
         },
         error: function(error){
             alert(error.responseText);

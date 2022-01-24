@@ -22,6 +22,33 @@ import java.util.UUID;
 @Service
 public class OrderService {
     @Autowired private OrderRepository orderRepository;
+    @Autowired private OrderBasketRepository orderBasketRepository;
+    @Autowired private AddressRepository addressRepository;
+
+    public List<Long> jsonArrToPostIdList(String arr) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Long> list = new ArrayList<>();
+        try {
+             list = mapper.readValue(arr, new TypeReference<List<Long>>() {});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
+    public List<OrderBasketDTO.Response> getBasketToOrder(List<Long> postIdList) {
+
+        List<OrderBasketDTO.Response> basketList = new ArrayList<>();
+        for (Long postid : postIdList) {
+            OrderBasketDTO.Response basket = orderBasketRepository.findByPostId(postid);
+            basketList.add(basket);
+        }
+
+        return basketList;
+    }
 
     public void addOrders(String arr, HttpSession session) {
 
@@ -56,26 +83,4 @@ public class OrderService {
 
 
 
-
-
-
-    private List<OrderBasketDTO.basketToOrder> jsonArrToList(String arr) {
-
-        ObjectMapper mapper = new ObjectMapper();
-        List<OrderBasketDTO.basketToOrder> basketList = new ArrayList();
-
-        try{
-            List<Object> list = mapper.readValue(arr, new TypeReference<List>() {});
-
-            for (int i = 0; i < list.size(); i++) {
-                String json = mapper.writeValueAsString(list.get(i));
-                OrderBasketDTO.basketToOrder basketToOrder = mapper.readValue(json, OrderBasketDTO.basketToOrder.class);
-                basketList.add(basketToOrder);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return basketList;
-    }
 }
