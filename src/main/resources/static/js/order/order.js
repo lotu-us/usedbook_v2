@@ -22,6 +22,60 @@ function loadBasketToOrder(){
 
 
 
+function saveOrder(){
+
+    var postcode = document.querySelector("#sample6_postcode").value;
+    var defaultAddress = document.querySelector("#sample6_address").value;
+    var detailAddress = document.querySelector("#sample6_detailAddress").value;
+    var extraAddress = document.querySelector("#sample6_extraAddress").value;
+    if(postcode == "" || detailAddress == ""){
+        alert("배송정보를 입력해주세요");
+        return;
+    }
+
+    var payment = document.querySelector(".btn-group input[type='radio']:checked").value;
+    if(payment == ""){
+        alert("결제방법을 입력해주세요");
+        return;
+    }
+
+    var postList = new Array();
+    var postIds = document.querySelectorAll(".postId");
+    postIds.forEach(function(postId){
+        var post = {
+            id:0,
+            count:0
+        }
+
+        post.id = postId.value;
+        post.count = $(postId).parents("tr").find(".orderCount div").text();
+        postList.push(post);
+    });
+
+
+    $.ajax({
+        url: "/api/order",
+        type: "post",
+        contentType: 'application/json',
+        data: JSON.stringify({
+            "postList" : postList,
+            "payment" : payment,
+            "address" : {
+                "postcode" : postcode,
+                "defaultAddress" : defaultAddress,
+                "detailAddress" : detailAddress,
+                "extraAddress" : extraAddress
+            }
+        }),
+        success: function(data){
+            window.location.replace("/order/detail");
+        },
+        error: function(error){
+            alert(error.responseText);
+        }
+    });
+}
+
 
 
 

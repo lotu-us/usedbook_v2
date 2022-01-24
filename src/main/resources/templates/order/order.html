@@ -63,18 +63,18 @@
     <div class="mt-4">
         <h5>결제방법</h5>
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" value="CARD" checked>
             <label class="btn btn-outline-primary" for="btnradio1">체크/신용카드</label>
 
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="PHONE">
             <label class="btn btn-outline-primary" for="btnradio2">휴대폰결제</label>
 
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="ACCOUNT">
             <label class="btn btn-outline-primary" for="btnradio3">무통장입금</label>
         </div>
     </div>
 
-    <p class="mt-5 text-center"><button class="btn btn-primary">결제하기</button></p>
+    <p class="mt-5 text-end"><button class="btn btn-primary" onclick="saveOrder()">결제하기</button></p>
 
 </div>
 

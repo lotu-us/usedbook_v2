@@ -1,15 +1,18 @@
 package team.hello.usedbook.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.hello.usedbook.config.SessionConstants;
+import team.hello.usedbook.domain.Address;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Orders;
 import team.hello.usedbook.domain.dto.OrderBasketDTO;
-import team.hello.usedbook.domain.enums.OrderStatus;
-import team.hello.usedbook.domain.enums.Payment;
+import team.hello.usedbook.domain.dto.OrderDTO;
+import team.hello.usedbook.repository.AddressRepository;
+import team.hello.usedbook.repository.OrderBasketRepository;
 import team.hello.usedbook.repository.OrderRepository;
 
 import javax.servlet.http.HttpSession;
@@ -50,10 +53,10 @@ public class OrderService {
         return basketList;
     }
 
-    public void addOrders(String arr, HttpSession session) {
+
+    public void orderSave(OrderDTO.OrderForm orderForm, HttpSession session) {
 
         Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
-        List<OrderBasketDTO.basketToOrder> basketList = jsonArrToList(arr);
 
         //날짜
         String orderTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -67,17 +70,19 @@ public class OrderService {
         String orderId = time + "_" + uuid;
 
 
-        for (OrderBasketDTO.basketToOrder basket : basketList) {
+        for (OrderDTO.OrderPosts orderPosts : orderForm.getPostList()) {
+            Address address = orderForm.getAddress();
+            addressRepository.save(address);
+
             Orders orders = new Orders(
                     orderId,
                     loginMember.getId(),
-                    basket.getPostid(),
-                    basket.getCount(),
-                    OrderStatus.READY,
-                    Payment.READY,
-                    orderTime
+                    orderPosts.getId(),
+                    orderPosts.getCount(),
+                    orderTime,
+                    address.getId()
             );
-            orderRepository.addOrder(orders);
+            orderRepository.save(orders);
         }
     }
 

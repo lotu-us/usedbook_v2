@@ -15,6 +15,7 @@ public class Orders {
     private OrderStatus orderStatus;
     private Payment payment;
     private String orderTime;
+    private Long addressId;
 
 
 //    private Long postcode;
@@ -23,14 +24,13 @@ public class Orders {
 //    private String extraAddress;
 
     //basket to order
-    public Orders(String orderId, Long memberId, Long postId, int count, OrderStatus orderStatus, Payment payment, String orderTime) {
+    public Orders(String orderId, Long memberId, Long postId, int count, String orderTime, Long addressId) {
         this.orderId = orderId;
         this.memberId = memberId;
         this.postId = postId;
         this.count = count;
-        this.orderStatus = orderStatus;
-        this.payment = payment;
         this.orderTime = orderTime;
+        this.addressId = addressId;
     }
 
 }
