@@ -51,11 +51,13 @@ public class OrderApiController {
 
 
     @PostMapping("/order")
+    @Transactional
     public ResponseEntity saveOrders(@RequestBody OrderDTO.OrderForm orderForm, HttpSession session){
 
-        orderService.orderSave(orderForm, session);
+        String orderId = orderService.orderSave(orderForm, session);
+        //orderService.deleteOrderedPost(orderForm, session);
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(orderId);
     }
 
     @GetMapping("/order/{orderId}")

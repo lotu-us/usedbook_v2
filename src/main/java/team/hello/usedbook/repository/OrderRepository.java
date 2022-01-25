@@ -3,17 +3,17 @@ package team.hello.usedbook.repository;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Orders;
-
-import java.util.List;
+import team.hello.usedbook.domain.dto.OrderDTO;
 
 @Mapper
 @Repository
 public interface OrderRepository {
 
-    @Insert("insert into orders(orderid, memberid, postid, count, status, payment, ordertime, addressid) " +
-            "values(#{orderId}, #{memberId}, #{postId}, #{count}, #{orderStatus}, #{payment}, #{orderTime}, #{addressId})")
+    @Insert("insert into orders(orderid, memberid, status, payment, ordertime) " +
+            "values(#{orderId}, #{memberId}, #{orderStatus}, #{payment}, #{orderTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(Orders orders);
 

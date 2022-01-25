@@ -10,8 +10,8 @@ import team.hello.usedbook.domain.Address;
 @Repository
 public interface AddressRepository {
 
-    @Insert("insert into address(postcode, defaultaddress, detailaddress, extraaddress)" +
-            "values(#{postcode}, #{defaultaddress}, #{detailaddress}, #{extraaddress})")
+    @Insert("insert into address(orderid, postcode, defaultaddress, detailaddress, extraaddress)" +
+            "values(#{orderId}, #{postcode}, #{defaultAddress}, #{detailAddress}, #{extraAddress})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(Address address);
 }

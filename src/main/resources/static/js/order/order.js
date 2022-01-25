@@ -43,11 +43,11 @@ function saveOrder(){
     var postIds = document.querySelectorAll(".postId");
     postIds.forEach(function(postId){
         var post = {
-            id:0,
+            postId:0,
             count:0
         }
 
-        post.id = postId.value;
+        post.postId = postId.value;
         post.count = $(postId).parents("tr").find(".orderCount div").text();
         postList.push(post);
     });
@@ -67,8 +67,8 @@ function saveOrder(){
                 "extraAddress" : extraAddress
             }
         }),
-        success: function(data){
-            window.location.replace("/order/detail");
+        success: function(orderId){
+            window.location.replace("/order/detail/"+orderId);
         },
         error: function(error){
             alert(error.responseText);

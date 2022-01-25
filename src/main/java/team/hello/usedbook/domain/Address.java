@@ -6,6 +6,7 @@ import lombok.ToString;
 @Getter @ToString
 public class Address {
     private Long id;
+    private String orderId;
     private String postcode;
     private String defaultAddress;
     private String detailAddress;
@@ -16,5 +17,9 @@ public class Address {
         this.defaultAddress = defaultAddress;
         this.detailAddress = detailAddress;
         this.extraAddress = extraAddress;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

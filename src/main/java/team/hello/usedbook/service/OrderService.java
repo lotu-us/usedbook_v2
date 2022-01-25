@@ -53,8 +53,8 @@ public class OrderService {
         return basketList;
     }
 
-
-    public void orderSave(OrderDTO.OrderForm orderForm, HttpSession session) {
+    @Transactional
+    public String orderSave(OrderDTO.OrderForm orderForm, HttpSession session) {
 
         Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
 
@@ -67,23 +67,29 @@ public class OrderService {
                 .replace("-", "")
                 .replace(":", "")
                 .replace(" ", "");
-        String orderId = time + "_" + uuid;
+        String orderId = time + uuid;
+
+        Orders orders = new Orders(
+                orderId,
+                loginMember.getId(),
+                OrderStatus.COMPLETE,
+                orderForm.getPayment(),
+                orderTime
+        );
+        orderRepository.save(orders);
 
 
-        for (OrderDTO.OrderPosts orderPosts : orderForm.getPostList()) {
-            Address address = orderForm.getAddress();
-            addressRepository.save(address);
+        Address address = orderForm.getAddress();
+        address.setOrderId(orderId);
+        addressRepository.save(address);
 
-            Orders orders = new Orders(
-                    orderId,
-                    loginMember.getId(),
-                    orderPosts.getId(),
-                    orderPosts.getCount(),
-                    orderTime,
-                    address.getId()
-            );
-            orderRepository.save(orders);
+
+        for (OrderPost orderPost : orderForm.getPostList()) {
+            orderPost.setOrderId(orderId);
+            orderPostRepository.save(orderPost);
         }
+
+        return orderId;
     }
 
 
