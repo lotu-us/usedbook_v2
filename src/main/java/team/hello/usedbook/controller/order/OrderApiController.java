@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.dto.OrderBasketDTO;
 import team.hello.usedbook.domain.dto.OrderDTO;
 import team.hello.usedbook.repository.OrderRepository;
+import team.hello.usedbook.service.OrderBasketService;
 import team.hello.usedbook.service.OrderService;
 
 import javax.servlet.http.HttpSession;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class OrderApiController {
     @Autowired private OrderService orderService;
+    @Autowired private OrderBasketService orderBasketService;
     @Autowired private OrderRepository orderRepository;
 
 
@@ -61,12 +64,12 @@ public class OrderApiController {
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity getOrders(@PathVariable Long orderId, HttpSession session){
+    public ResponseEntity getOrderDetail(@PathVariable String orderId, HttpSession session){
 
-        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
-        //Orders = orderRepository.findById(loginMember.getId(), orderId);
+        Member loginMember = (Member)session.getAttribute(SessionConstants.LOGIN_MEMBER);
+        OrderDTO.OrderDetail order = orderRepository.getOrderDetail(orderId, loginMember.getId());
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
 

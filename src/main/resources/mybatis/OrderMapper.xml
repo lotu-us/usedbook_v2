@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="team.hello.usedbook.repository.OrderRepository">
+
+
+    <resultMap id="addressMap" type="Address">
+        <id property="id" column="address_id"></id>
+        <result property="orderId" column="orderid"></result>
+        <result property="postcode" column="postcode"></result>
+        <result property="defaultAddress" column="defaultaddress"></result>
+        <result property="detailAddress" column="detailaddress"></result>
+        <result property="extraAddress" column="extraaddress"></result>
+    </resultMap>
+
+
+    <resultMap id="orderPostList" type="team.hello.usedbook.domain.dto.OrderPostDTO$Response">
+        <id property="id" column="orderpost_id"></id>
+        <result property="orderId" column="orderid"></result>
+        <result property="postId" column="postid"></result>
+        <result property="writer" column="writer"></result>
+        <result property="title" column="title"></result>
+        <result property="price" column="price"></result>
+        <result property="count" column="count"></result>
+    </resultMap>
+
+
+    <resultMap id="getOrdersMap" type="team.hello.usedbook.domain.dto.OrderDTO$OrderDetail">
+        <id property="id" column="id"></id>
+        <result property="orderId" column="orderid"></result>
+        <result property="memberId" column="memberid"></result>
+        <result property="status" column="status"></result>
+        <result property="payment" column="payment"></result>
+        <result property="orderTime" column="ordertime"></result>
+
+        <association property="address" column="orderid" resultMap="addressMap"></association>
+        <collection property="orderPostList" column="orderid" resultMap="orderPostList"></collection>
+    </resultMap>
+    <select id="getOrderDetail" resultMap="getOrdersMap" parameterType="Map">
+        SELECT orders.*,
+            orderpost.id AS orderpost_id, orderpost.*,
+            post.writer, post.title, post.price,
+            address.id AS address_id, address.*
+        FROM orders JOIN orderpost ON orders.orderid = orderpost.orderid
+                    JOIN address ON orders.orderid = address.orderid
+                    JOIN post ON orderpost.postid = post.id
+        where orders.orderid=#{orderId} AND orders.memberid =#{memberId}
+    </select>
+
+
+
+
+
+</mapper>

@@ -17,6 +17,9 @@ public interface OrderRepository {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(Orders orders);
 
-    //@Select("select ")
-    List<Orders> findById(Long id, Long orderId);
+
+    //mapper 참고
+    OrderDTO.OrderDetail getOrderDetail(@Param("orderId") String orderId, @Param("memberId") Long memberId);
+
+
 }

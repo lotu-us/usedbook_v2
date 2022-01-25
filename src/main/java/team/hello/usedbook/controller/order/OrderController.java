@@ -15,4 +15,9 @@ public class OrderController {
     public String order(){
         return "order/order";
     }
+
+    @GetMapping("/order/detail/{orderId}")
+    public String orderDetail(){
+        return "order/detail";
+    }
 }
