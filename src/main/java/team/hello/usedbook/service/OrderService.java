@@ -5,14 +5,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Address;
 import team.hello.usedbook.domain.Member;
+import team.hello.usedbook.domain.OrderPost;
 import team.hello.usedbook.domain.Orders;
 import team.hello.usedbook.domain.dto.OrderBasketDTO;
 import team.hello.usedbook.domain.dto.OrderDTO;
+import team.hello.usedbook.domain.enums.OrderStatus;
 import team.hello.usedbook.repository.AddressRepository;
 import team.hello.usedbook.repository.OrderBasketRepository;
+import team.hello.usedbook.repository.OrderPostRepository;
 import team.hello.usedbook.repository.OrderRepository;
 
 import javax.servlet.http.HttpSession;
@@ -27,6 +31,7 @@ public class OrderService {
     @Autowired private OrderRepository orderRepository;
     @Autowired private OrderBasketRepository orderBasketRepository;
     @Autowired private AddressRepository addressRepository;
+    @Autowired private OrderPostRepository orderPostRepository;
 
     public List<Long> jsonArrToPostIdList(String arr) {
 
@@ -93,5 +98,11 @@ public class OrderService {
     }
 
 
+    public void deleteOrderedPost(OrderDTO.OrderForm orderForm, HttpSession session) {
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
 
+        for (OrderPost orderPost : orderForm.getPostList()) {
+            orderBasketRepository.deleteBasket(loginMember.getId(), orderPost.getPostId());
+        }
+    }
 }
