@@ -14,10 +14,8 @@ import team.hello.usedbook.domain.Orders;
 import team.hello.usedbook.domain.dto.OrderBasketDTO;
 import team.hello.usedbook.domain.dto.OrderDTO;
 import team.hello.usedbook.domain.enums.OrderStatus;
-import team.hello.usedbook.repository.AddressRepository;
-import team.hello.usedbook.repository.OrderBasketRepository;
-import team.hello.usedbook.repository.OrderPostRepository;
-import team.hello.usedbook.repository.OrderRepository;
+import team.hello.usedbook.domain.enums.SaleStatus;
+import team.hello.usedbook.repository.*;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
@@ -32,6 +30,7 @@ public class OrderService {
     @Autowired private OrderBasketRepository orderBasketRepository;
     @Autowired private AddressRepository addressRepository;
     @Autowired private OrderPostRepository orderPostRepository;
+    @Autowired private PostRepository postRepository;
 
     public List<Long> jsonArrToPostIdList(String arr) {
 
@@ -98,11 +97,17 @@ public class OrderService {
     }
 
 
-    public void deleteOrderedPost(OrderDTO.OrderForm orderForm, HttpSession session) {
+    public void deletePostInOrderBasket(OrderDTO.OrderForm orderForm, HttpSession session) {
         Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
 
         for (OrderPost orderPost : orderForm.getPostList()) {
             orderBasketRepository.deleteBasket(loginMember.getId(), orderPost.getPostId());
+        }
+    }
+
+    public void minusPostStock(OrderDTO.OrderForm orderForm) {
+        for (OrderPost orderPost : orderForm.getPostList()) {
+            postRepository.minusPostStock(orderPost.getPostId(), orderPost.getCount(), SaleStatus.COMPLETE.toString());
         }
     }
 }

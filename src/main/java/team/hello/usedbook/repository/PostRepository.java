@@ -52,5 +52,11 @@ public interface PostRepository {
     @Update("update post set likecount=(likecount ${num}) where id=#{postId}")
     int changeLikeCount(Long postId, String num);
 
+
+
+
+
+    @Update("update post set stock=(stock - #{count}), salestatus = if(stock = '0', #{saleStatus}, salestatus) where id=#{postId};")
+    int minusPostStock(Long postId, int count, String saleStatus);
 }
 

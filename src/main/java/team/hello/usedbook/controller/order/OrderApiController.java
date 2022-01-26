@@ -58,7 +58,8 @@ public class OrderApiController {
     public ResponseEntity saveOrders(@RequestBody OrderDTO.OrderForm orderForm, HttpSession session){
 
         String orderId = orderService.orderSave(orderForm, session);
-        orderService.deleteOrderedPost(orderForm, session);
+        orderService.deletePostInOrderBasket(orderForm, session);
+        orderService.minusPostStock(orderForm);
 
         return ResponseEntity.status(HttpStatus.OK).body(orderId);
     }
