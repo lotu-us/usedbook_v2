@@ -64,14 +64,13 @@
 
         <collection property="orderPostList" column="orderid" resultMap="orderPostList"></collection>
     </resultMap>
-    <select id="findMyOrders" resultMap="getOrdersMap" parameterType="map">
+    <select id="findMyOrderPosts" resultMap="getOrdersMap" parameterType="String">
         select orders.*,
             orderpost.id AS orderpost_id, orderpost.*,
             post.writer, post.title, post.price
         FROM orders JOIN orderpost ON orders.orderid = orderpost.orderid
                     JOIN post ON orderpost.postid = post.id
-        where orders.memberid =#{loginMember.id}
-        limit #{pagination.postLimit} offset #{pagination.postOffset}
+        Where orders.orderid = #{orderId}
     </select>
 
 

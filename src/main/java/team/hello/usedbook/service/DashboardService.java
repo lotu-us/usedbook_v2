@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
+import team.hello.usedbook.domain.Orders;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.CommentDTO;
 import team.hello.usedbook.domain.dto.OrderDTO;
@@ -12,6 +13,7 @@ import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.repository.DashboardRepository;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,10 +84,16 @@ public class DashboardService {
         int count = dashboardRepository.findMyOrdersCount(loginMember);
 
         pagination.init(count);
-        List<OrderDTO.OrderListItem> orders = dashboardRepository.findMyOrders(loginMember, pagination);
+        List<Orders> orders = dashboardRepository.findMyOrders(loginMember, pagination);
+
+        List<OrderDTO.OrderListItem> myOrderPosts = new ArrayList<>();
+        for (Orders order : orders) {
+            OrderDTO.OrderListItem myOrderPost = dashboardRepository.findMyOrderPosts(order.getOrderId());
+            myOrderPosts.add(myOrderPost);
+        }
 
         Map<String, Object> result = new HashMap<>();
-        result.put("orders", orders);
+        result.put("orders", myOrderPosts);
         result.put("pagination", pagination);
 
         return result;

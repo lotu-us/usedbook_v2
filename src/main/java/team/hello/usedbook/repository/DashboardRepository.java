@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Member;
+import team.hello.usedbook.domain.Orders;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.CommentDTO;
 import team.hello.usedbook.domain.dto.OrderDTO;
@@ -41,6 +42,13 @@ public interface DashboardRepository {
     @Select("select count(*) from orders where memberid=#{id}")
     int findMyOrdersCount(Member loginMember);
 
+    @Select("select id, memberid, orderid, status, payment, ordertime " +
+            "FROM orders " +
+            "where memberid=#{loginMember.id} " +
+            "order by ordertime desc " +
+            "limit #{pagination.postLimit} offset #{pagination.postOffset}")
+    List<Orders> findMyOrders(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
+
     //mapper
-    List<OrderDTO.OrderListItem> findMyOrders(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
+    OrderDTO.OrderListItem findMyOrderPosts(String orderId);
 }
