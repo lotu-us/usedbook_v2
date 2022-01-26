@@ -13,7 +13,7 @@ import team.hello.usedbook.domain.dto.OrderDTO;
 public interface OrderRepository {
 
     @Insert("insert into orders(orderid, memberid, status, payment, ordertime) " +
-            "values(#{orderId}, #{memberId}, #{orderStatus}, #{payment}, #{orderTime})")
+            "values(#{orderId}, #{memberId}, #{status}, #{payment}, #{orderTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(Orders orders);
 

@@ -74,8 +74,8 @@ public class OrderService {
         String orderId = time + uuid;
 
         Orders orders = new Orders(
-                orderId,
                 loginMember.getId(),
+                orderId,
                 OrderStatus.COMPLETE,
                 orderForm.getPayment(),
                 orderTime

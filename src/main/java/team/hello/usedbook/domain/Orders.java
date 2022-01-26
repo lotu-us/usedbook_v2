@@ -8,17 +8,26 @@ import team.hello.usedbook.domain.enums.Payment;
 @Getter @ToString
 public class Orders {
     private Long id;
-    private String orderId;
     private Long memberId;
-    private OrderStatus orderStatus;
+    private String orderId;
+    private OrderStatus status;
     private Payment payment;
     private String orderTime;
 
 
-    public Orders(String orderId, Long memberId, OrderStatus orderStatus, Payment payment, String orderTime) {
-        this.orderId = orderId;
+    public Orders(Long memberId, String orderId, OrderStatus status, Payment payment, String orderTime) {
         this.memberId = memberId;
-        this.orderStatus = orderStatus;
+        this.orderId = orderId;
+        this.status = status;
+        this.payment = payment;
+        this.orderTime = orderTime;
+    }
+
+    public Orders(Long id, Long memberId, String orderId, OrderStatus status, Payment payment, String orderTime) {
+        this.id = id;
+        this.memberId = memberId;
+        this.orderId = orderId;
+        this.status = status;
         this.payment = payment;
         this.orderTime = orderTime;
     }
