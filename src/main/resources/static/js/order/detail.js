@@ -35,7 +35,7 @@ function addAddress(address){
 
     var inputs = document.querySelectorAll(".addressInfo input");
     inputs.forEach(function(input){
-        input.readonly = true;
+        input.readOnly = true;
     });
 }
 
