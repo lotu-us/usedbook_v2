@@ -56,13 +56,16 @@ function addTR(orders){
 
         result = result + `
         <tr>
-            <th scope="row" class="enter">
-                <a href="/order/detail/${order.orderId}" style="text-decoration:none;">${order.orderId}</a>
-            </th>
             <td>
-                ${content}
+                <div>
+                    주문번호 : <a href="/order/detail/${order.orderId}" style="text-decoration:none;">${order.orderId}</a><br>
+                    주문일시 : <span>${order.orderTime}</span>
+                </div>
+                <hr>
+                <div>
+                    ${content}
+                </div>
             </td>
-            <td class="enter">${order.orderTime}</td>
             <td class="won">${sum}</td>
         </tr>
         `;
