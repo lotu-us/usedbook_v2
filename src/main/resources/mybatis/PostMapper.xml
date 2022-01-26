@@ -40,23 +40,6 @@
 
 
 
-<!--    <resultMap id="postMap" type="Post">-->
-<!--        <id property="id" column="id"></id>-->
-<!--        <result property="writer" column="writer"></result>-->
-<!--        <result property="title" column="title"></result>-->
-<!--        <result property="content" column="content"></result>-->
-<!--        <result property="price" column="price"></result>-->
-<!--        <result property="stock" column="stock"></result>-->
-<!--        <result property="category" column="category"></result>-->
-<!--        <result property="createTime" column="createtime"></result>-->
-<!--        <result property="saleStatus" column="salestatus"></result>-->
-<!--        <result property="viewCount" column="viewcount"></result>-->
-<!--        <result property="likeCount" column="likecount"></result>-->
-<!--        <result property="commentCount" column="commentcount"></result>-->
-<!--    </resultMap>-->
-<!--    <select id="postMap" resultMap="postMap" parameterType="Long">-->
-<!--        select * from post where id=#{postId}-->
-<!--    </select>-->
 
     <resultMap id="fileMap" type="String">
         <result column="filename"></result>
@@ -79,11 +62,13 @@
         <result property="viewCount" column="viewcount"></result>
         <result property="likeCount" column="likecount"></result>
         <result property="commentCount" column="commentcount"></result>
-<!--        <association property="post" column="id" select="postMap"></association>-->
+<!--        <collection property="fileNames" resultMap="fileMap" ></collection>-->
         <collection property="fileNames" column="id" select="fileMap"></collection>
     </resultMap>
     <select id="findPostAndFileById" resultMap="postAndFile" parameterType="Long">
-<!--        SELECT id from post WHERE id=#{postId}-->
+<!--        select post.*, postfile.id as postfile_id, postfile.filename-->
+<!--        from post left join postfile on post.id=postfile.postid-->
+<!--        where post.id=#{postId}-->
         SELECT * from post WHERE id=#{postId}
     </select>
 
