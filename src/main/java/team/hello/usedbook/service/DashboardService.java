@@ -6,6 +6,7 @@ import team.hello.usedbook.config.SessionConstants;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.CommentDTO;
+import team.hello.usedbook.domain.dto.OrderDTO;
 import team.hello.usedbook.domain.dto.Pagination;
 import team.hello.usedbook.domain.dto.PostDTO;
 import team.hello.usedbook.repository.DashboardRepository;
@@ -69,6 +70,22 @@ public class DashboardService {
 
         List<PostDTO.Response> responses = ListPostToListDto(posts);
         result.put("posts", responses);
+        result.put("pagination", pagination);
+
+        return result;
+    }
+
+    public Map<String, Object> findMyOrders(HttpSession session, Pagination pagination) {
+        Member loginMember = (Member) session.getAttribute(SessionConstants.LOGIN_MEMBER);
+
+        pagination.setCategory(null);
+        int count = dashboardRepository.findMyOrdersCount(loginMember);
+
+        pagination.init(count);
+        List<OrderDTO.OrderListItem> orders = dashboardRepository.findMyOrders(loginMember, pagination);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("orders", orders);
         result.put("pagination", pagination);
 
         return result;

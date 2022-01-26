@@ -32,4 +32,9 @@ public class DashboardController {
     public String myFavorites(){
         return "dashboard/myFavorites";
     }
+
+    @GetMapping("/dashboard/myOrders")
+    public String myOrders(){
+        return "dashboard/myOrders";
+    }
 }

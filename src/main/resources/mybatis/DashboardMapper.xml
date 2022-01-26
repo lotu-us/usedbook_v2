@@ -16,7 +16,7 @@
 
 
 
-    <resultMap id="DashboardResponse" type="team.hello.usedbook.domain.dto.CommentDTO$DashboardResponse">
+    <resultMap id="DashboardCommentResponse" type="team.hello.usedbook.domain.dto.CommentDTO$DashboardResponse">
         <result column="id" property="postId"></result>
         <result column="salestatus" property="postSaleStatus"></result>
         <result column="title" property="postTitle"></result>
@@ -24,7 +24,7 @@
         <result column="createtime" property="commentCreatetime"></result>
     </resultMap>
 
-    <select id="findMyComments" resultMap="DashboardResponse" parameterType="map">
+    <select id="findMyComments" resultMap="DashboardCommentResponse" parameterType="map">
         SELECT post.id, post.salestatus, post.title, comment.content, comment.createtime
         FROM post JOIN comment ON post.id=comment.postid
         WHERE comment.writer=#{loginMember.nickname}
@@ -47,5 +47,32 @@
         </trim>
         limit #{pagination.postLimit} offset #{pagination.postOffset}
     </select>
+
+
+    <resultMap id="orderPostList" type="team.hello.usedbook.domain.dto.OrderPostDTO$Response">
+        <id property="id" column="orderpost_id"></id>
+        <result property="orderId" column="orderid"></result>
+        <result property="postId" column="postid"></result>
+        <result property="writer" column="writer"></result>
+        <result property="title" column="title"></result>
+        <result property="price" column="price"></result>
+        <result property="count" column="count"></result>
+    </resultMap>
+    <resultMap id="getOrdersMap" type="team.hello.usedbook.domain.dto.OrderDTO$OrderListItem">
+        <id property="orderId" column="orderid"></id>
+        <result property="orderTime" column="ordertime"></result>
+
+        <collection property="orderPostList" column="orderid" resultMap="orderPostList"></collection>
+    </resultMap>
+    <select id="findMyOrders" resultMap="getOrdersMap" parameterType="map">
+        select orders.*,
+            orderpost.id AS orderpost_id, orderpost.*,
+            post.writer, post.title, post.price
+        FROM orders JOIN orderpost ON orders.orderid = orderpost.orderid
+                    JOIN post ON orderpost.postid = post.id
+        where orders.memberid =#{loginMember.id}
+        limit #{pagination.postLimit} offset #{pagination.postOffset}
+    </select>
+
 
 </mapper>

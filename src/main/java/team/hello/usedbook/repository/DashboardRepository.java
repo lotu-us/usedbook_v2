@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import team.hello.usedbook.domain.Member;
 import team.hello.usedbook.domain.Post;
 import team.hello.usedbook.domain.dto.CommentDTO;
+import team.hello.usedbook.domain.dto.OrderDTO;
 import team.hello.usedbook.domain.dto.Pagination;
 
 import java.util.List;
@@ -36,4 +37,10 @@ public interface DashboardRepository {
 
     //DashboardMapper참고
     List<Post> findMyFavorites(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
+
+    @Select("select count(*) from orders where memberid=#{id}")
+    int findMyOrdersCount(Member loginMember);
+
+    //mapper
+    List<OrderDTO.OrderListItem> findMyOrders(@Param("loginMember") Member loginMember, @Param("pagination") Pagination pagination);
 }

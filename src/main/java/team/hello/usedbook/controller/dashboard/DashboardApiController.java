@@ -39,4 +39,11 @@ public class DashboardApiController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @GetMapping("/dashboard/myOrders")
+    public ResponseEntity myOrders(HttpSession session, @ModelAttribute Pagination pagination){
+
+        Map<String, Object> result = dashboardService.findMyOrders(session, pagination);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }
